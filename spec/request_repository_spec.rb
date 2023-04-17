@@ -31,7 +31,7 @@ RSpec.describe RequestRepository do
     end
   end
 
-  context '#find' do
+  context '#create' do
     it "creates a request" do
       request = Request.new
       request.space_id = 2   
@@ -44,6 +44,19 @@ RSpec.describe RequestRepository do
       expect(repo.all.last.space_id).to eq 2
       expect(repo.all.last.requester_id).to eq 2
       expect(repo.all.last.date).to eq Date.parse('2023-10-17')
+    end
+  end
+
+  context '#delete' do
+    it "deletes a request" do
+      repo.delete(1)
+
+      requests = repo.all
+      
+      expect(requests.first.id).to eq 2
+      expect(requests.first.space_id).to eq 1
+      expect(requests.first.requester_id).to eq 3
+      expect(requests.first.date).to eq Date.parse('2023-4-17')
     end
   end
 end

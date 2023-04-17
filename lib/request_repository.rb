@@ -16,6 +16,14 @@ class RequestRepository
     return nil
   end
 
+  def delete(request_id)
+    sql = 'DELETE FROM requests WHERE id=$1'
+    params = [request_id]
+    
+    DatabaseConnection.exec_params(sql, params)
+    return nil
+  end
+  
   def record_to_request(record)
     request = Request.new
     request.id = record['id'].to_i
