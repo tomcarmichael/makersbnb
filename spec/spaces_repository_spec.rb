@@ -26,7 +26,6 @@ describe SpacesRepository do
     expect(spaces.last.owner_id).to eq 4
   end
 
-
   it "finds a single space by ID" do
     space = repo.find_by_id(3)
     expect(space.id).to eq 3
@@ -37,14 +36,13 @@ describe SpacesRepository do
     expect(space.available_dates).to eq (expected_dates.map { |date| Date.parse(date) })
   end
 
-
-  xit "inserts a new Space into the DB" do
+  it "inserts a new Space into the DB" do
     space = Space.new
     space.name = "Bowser's Palace"
     space.description = "Boss level"
     space.owner_id = 4
     space.price_per_night = 49.99
-    space.available_dates = ['2023-5-4', '1994-7-9', '2023-7-10']
+    space.available_dates = ['2023-5-4', '1994-7-9'].map { |date| Date.parse(date) }
 
     repo.create(space)
     all_spaces = repo.all
