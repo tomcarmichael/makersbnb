@@ -13,10 +13,10 @@ RSpec.describe RequestRepository do
     reset_tables
   end
 
+  let(:repo) {RequestRepository.new}
+
   context '#all' do
     it "returns a list of all requests" do
-      repo = RequestRepository.new
-
       requests = repo.all
 
       expect(requests.first.id).to eq 1
@@ -28,6 +28,22 @@ RSpec.describe RequestRepository do
       expect(requests.last.space_id).to eq 5
       expect(requests.last.requester_id).to eq 1
       expect(requests.last.date).to eq Date.parse('2023-4-18')
+    end
+  end
+
+  context '#find' do
+    it "creates a request" do
+      request = Request.new
+      request.space_id = 2   
+      request.requester_id = 2   
+      request.date = Date.parse('2023-10-17')
+      
+      repo.create(request)
+
+      expect(repo.all.last.id).to eq 6
+      expect(repo.all.last.space_id).to eq 2
+      expect(repo.all.last.requester_id).to eq 2
+      expect(repo.all.last.date).to eq Date.parse('2023-10-17')
     end
   end
 end

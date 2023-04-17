@@ -8,6 +8,14 @@ class RequestRepository
     return result_set.map(&method(:record_to_request))
   end
 
+  def create(request)
+    sql = 'INSERT INTO requests (space_id, requester_id, date) VALUES ($1, $2, $3)'
+    params = [request.space_id, request.requester_id, request.date]
+
+    DatabaseConnection.exec_params(sql, params)
+    return nil
+  end
+
   def record_to_request(record)
     request = Request.new
     request.id = record['id'].to_i
