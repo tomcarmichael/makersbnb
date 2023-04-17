@@ -12,7 +12,7 @@ bundle install
 
 # Create local databases
 createdb makersbnb
-createdb makersbnb-test
+createdb makersbnb_test
 
 # Seed the databases
 psql -h 127.0.0.1 makersbnb < ./spec/seeds/create_tables.sql
