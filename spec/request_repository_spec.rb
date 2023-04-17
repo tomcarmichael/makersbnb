@@ -71,4 +71,16 @@ RSpec.describe RequestRepository do
       expect(requests.first.date).to eq Date.parse('2023-4-17')
     end
   end
+
+  context '#find_by_space_id' do
+    it "finds all requests with associated space id" do
+      requests = repo.find_by_space_id(1)
+
+      expect(requests.length).to eq 2
+      expect(requests.first.id).to eq 1
+      expect(requests.first.space_id).to eq 1
+      expect(requests.first.requester_id).to eq 2
+      expect(requests.first.date).to eq Date.parse('2023-4-17')
+    end
+  end
 end

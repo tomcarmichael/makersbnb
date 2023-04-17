@@ -31,6 +31,14 @@ class RequestRepository
     result_set = DatabaseConnection.exec_params(sql, params)
     return result_set.map(&method(:record_to_request))
   end
+
+  def find_by_space_id(space_id)
+    sql = 'SELECT * FROM requests WHERE space_id=$1'
+    params = [space_id]
+
+    result_set = DatabaseConnection.exec_params(sql, params)
+    return result_set.map(&method(:record_to_request))
+  end
   
   def record_to_request(record)
     request = Request.new
