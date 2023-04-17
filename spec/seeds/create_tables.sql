@@ -16,20 +16,14 @@ CREATE TABLE spaces (
 	CONSTRAINT fk_owner_id foreign key(owner_id) REFERENCES users(id) on delete cascade
 );
 
+CREATE TYPE status as ENUM ('requested', 'confirmed', 'rejected');
+
 CREATE TABLE requests (
 	id SERIAL PRIMARY KEY,
 	space_id int,
 	requester_id int,
 	date date,
-	CONSTRAINT fk_space_id foreign key(space_id) REFERENCES spaces(id) on delete cascade,
-	CONSTRAINT fk_requester_id foreign key(requester_id) REFERENCES users(id) on delete cascade
-);
-
-CREATE TABLE bookings (
-	id SERIAL PRIMARY KEY,
-	space_id int,
-	requester_id int,
-	date date,
+	status status,
 	CONSTRAINT fk_space_id foreign key(space_id) REFERENCES spaces(id) on delete cascade,
 	CONSTRAINT fk_requester_id foreign key(requester_id) REFERENCES users(id) on delete cascade
 );

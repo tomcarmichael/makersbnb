@@ -48,8 +48,12 @@ class RequestRepository
     return record_to_request(result_set.first)
   end
 
-  def find_by_place_id_and_date(id, date)
-    
+  def find_by_place_id_and_date(space_id, date)
+    sql = 'SELECT * FROM requests WHERE space_id=$1 AND date=$2'
+    params = [space_id, date]
+
+    result_set = DatabaseConnection.exec_params(sql, params)
+    return result_set.map(&method(:record_to_request))
   end
   
   def record_to_request(record)
@@ -58,6 +62,7 @@ class RequestRepository
     request.space_id = record['space_id'].to_i
     request.requester_id = record['requester_id'].to_i
     request.date = Date.parse(record['date'])
+    request.status = record['status']
     return request
   end
 end

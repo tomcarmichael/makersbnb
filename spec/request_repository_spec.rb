@@ -23,11 +23,13 @@ RSpec.describe RequestRepository do
       expect(requests.first.space_id).to eq 1
       expect(requests.first.requester_id).to eq 2
       expect(requests.first.date).to eq Date.parse('2023-4-17')
+      expect(requests.first.status).to eq 'requested'
       
-      expect(requests.last.id).to eq 5
-      expect(requests.last.space_id).to eq 5
-      expect(requests.last.requester_id).to eq 1
+      expect(requests.last.id).to eq 7
+      expect(requests.last.space_id).to eq 1
+      expect(requests.last.requester_id).to eq 3
       expect(requests.last.date).to eq Date.parse('2023-4-18')
+      expect(requests.last.status).to eq 'rejected'
     end
   end
 
@@ -40,7 +42,7 @@ RSpec.describe RequestRepository do
       
       repo.create(request)
 
-      expect(repo.all.last.id).to eq 6
+      expect(repo.all.last.id).to eq 8
       expect(repo.all.last.space_id).to eq 2
       expect(repo.all.last.requester_id).to eq 2
       expect(repo.all.last.date).to eq Date.parse('2023-10-17')
@@ -64,7 +66,7 @@ RSpec.describe RequestRepository do
     it "finds all requests with associated requester id" do
       requests = repo.find_by_requester_id(3)
 
-      expect(requests.length).to eq 2
+      expect(requests.length).to eq 3
       expect(requests.first.id).to eq 2
       expect(requests.first.space_id).to eq 1
       expect(requests.first.requester_id).to eq 3
@@ -76,7 +78,7 @@ RSpec.describe RequestRepository do
     it "finds all requests with associated space id" do
       requests = repo.find_by_space_id(1)
 
-      expect(requests.length).to eq 2
+      expect(requests.length).to eq 4
       expect(requests.first.id).to eq 1
       expect(requests.first.space_id).to eq 1
       expect(requests.first.requester_id).to eq 2
@@ -97,7 +99,7 @@ RSpec.describe RequestRepository do
 
   context '#find_by_place_id_and_date' do
     it "finds a request by place id and date" do
-      requests = repo.find_by_place_id_and_date(1, Date.parse())
+      requests = repo.find_by_place_id_and_date(1, '2023-4-17')
 
       expect(requests.first.id).to eq 1
       expect(requests.first.space_id).to eq 1

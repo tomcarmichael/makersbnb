@@ -1,4 +1,4 @@
-TRUNCATE TABLE users, spaces, requests, bookings RESTART IDENTITY;
+TRUNCATE TABLE users, spaces, requests RESTART IDENTITY;
 
 INSERT INTO users
 		(name, username, email, password)
@@ -20,16 +20,12 @@ INSERT INTO spaces
 		('Icy flower patch', 'Only for the hottest', 99.99, '{2023-4-18, 2023-4-19, 2023-4-20, 2023-4-21}'::date[], 4);
 
 INSERT INTO requests 
-		(space_id, requester_id, date)
+		(space_id, requester_id, date, status)
 	VALUES
-		(1, 2, '2023-4-17'),
-		(1, 3, '2023-4-17'),
-		(2, 3, '2023-3-18'),
-		(3, 4, '2023-4-1'),
-		(5, 1, '2023-4-18');
-
-INSERT INTO bookings
-		(space_id, requester_id, date)
-	VALUES
-		(1, 2, '2023-4-16'),
-		(6,3, '2023-4-22');
+		(1, 2, '2023-4-17', 'requested'),
+		(1, 3, '2023-4-17', 'requested'),
+		(2, 3, '2023-3-18', 'requested'),
+		(3, 4, '2023-4-1',  'requested'),
+		(5, 1, '2023-4-18', 'requested'),
+		(1, 2, '2023-4-18', 'confirmed'),
+		(1, 3, '2023-4-18', 'rejected');
