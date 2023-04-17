@@ -19,9 +19,17 @@ class RequestRepository
   def delete(request_id)
     sql = 'DELETE FROM requests WHERE id=$1'
     params = [request_id]
-    
+
     DatabaseConnection.exec_params(sql, params)
     return nil
+  end
+
+  def find_by_requester_id(requester_id)
+    sql = 'SELECT * FROM requests WHERE requester_id=$1'
+    params = [requester_id]
+
+    result_set = DatabaseConnection.exec_params(sql, params)
+    return result_set.map(&method(:record_to_request))
   end
   
   def record_to_request(record)
