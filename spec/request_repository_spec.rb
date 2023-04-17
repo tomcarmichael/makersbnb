@@ -83,4 +83,26 @@ RSpec.describe RequestRepository do
       expect(requests.first.date).to eq Date.parse('2023-4-17')
     end
   end
+
+  context '#find_by_id' do
+    it "finds a request by id" do
+      request = repo.find_by_id(1)
+
+      expect(request.id).to eq 1
+      expect(request.space_id).to eq 1
+      expect(request.requester_id).to eq 2
+      expect(request.date).to eq Date.parse('2023-4-17')
+    end
+  end
+
+  context '#find_by_place_id_and_date' do
+    it "finds a request by place id and date" do
+      requests = repo.find_by_place_id_and_date(1, Date.parse())
+
+      expect(requests.first.id).to eq 1
+      expect(requests.first.space_id).to eq 1
+      expect(requests.first.requester_id).to eq 2
+      expect(requests.first.date).to eq Date.parse('2023-4-17')
+    end
+  end
 end
