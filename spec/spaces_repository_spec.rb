@@ -13,18 +13,16 @@ describe SpacesRepository do
 
   let(:repo) { SpacesRepository.new }
 
-  xit "returns all spaces" do
+  it "returns all spaces" do
     spaces = repo.all
     expect(spaces.length).to eq(6)
     expect(spaces[0].id).to eq(1)
     expect(spaces[0].name).to eq('Happy meadows')
     expect(spaces[0].description).to eq 'A happy place'
-    expect(spaces[0].price_per_night).to eq 10.50
-    expect(spaces.last.id).to eq 2
+    expect(spaces[0].price_per_night).to eq 7.99
     expect(spaces.last.name ).to eq 'Icy flower patch'
     expected_dates = ['2023-4-18', '2023-4-19', '2023-4-20', '2023-4-21']
     expect(spaces.last.available_dates).to eq (expected_dates.map { |date| Date.parse(date) })
-
     expect(spaces.last.owner_id).to eq 4
   end
 

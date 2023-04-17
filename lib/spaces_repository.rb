@@ -15,12 +15,16 @@ class SpacesRepository
       space.description = row['description']
       space.price_per_night = row['price_per_night'].to_f.round(2)
       space.owner_id = row['owner_id'].to_i
-      # row['available_dates'].each { |date| space.available_dates << row['available_dates'] }
-      space.available_dates = row['available_dates']
+
+      date_array = row['available_dates'][1..-2].split(',')
+      space.available_dates = date_array.map do |date|
+        Date.parse(date)
+      end
+
       spaces << space
     end
 
-    return spaces # Returns an array of Space objects.
+    return spaces
   end
 
   def find_by_id(id) # One argument: the id (number)
@@ -32,14 +36,13 @@ class SpacesRepository
     space.description = result_set['description']
     space.price_per_night = result_set['price_per_night'].to_f.round(2)
     space.owner_id = result_set['owner_id'].to_i
-    # row['available_dates'].each { |date| space.available_dates << row['available_dates'] }
+
     date_array = result_set['available_dates'][1..-2].split(',')
     space.available_dates = date_array.map do |date|
       Date.parse(date)
     end
 
     return space
-    # Returns a single Space object.
   end
 
   def create(space)
