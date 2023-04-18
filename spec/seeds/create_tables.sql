@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS "public"."users", "public"."spaces", "public"."bookings", "public"."requests";
+
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
 	name text NOT NULL,
