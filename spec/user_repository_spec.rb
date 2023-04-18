@@ -58,6 +58,30 @@ describe UserRepository do
     expect(user.spaces.first.name).to eq 'Scary fields'
   end
 
+  context "#find_by_email"
+    it "finds a user by email" do
+
+      repo = UserRepository.new
+
+      user = repo.find_by_email("tom@email.com")
+
+      expect(user.id).to eq 4
+      expect(user.name).to eq 'Tom'
+      expect(user.username).to eq 'usertom'
+      expect(user.email).to eq 'tom@email.com'
+      expect(user.password).to eq 'tompassword'
+    end
+
+    it "returns nil if given invalid email" do
+      repo = UserRepository.new
+
+      user = repo.find_by_email("faker@example.com")
+
+      expect(user).to eq nil
+    end
+
+
+
   # xit 'returns all users and their spaces' do
   #   repo = UserRepository.new
   #   users = repo.all_with_spaces
