@@ -4,35 +4,34 @@ require_relative './space'
 
 class UserRepository
 
-  def all
-    users = []
-    sql = "SELECT id, name, username, email, password FROM users"
-    
-    result_set = DatabaseConnection.exec_params(sql, [])
-    result_set.each do |record|
-      user = User.new
-      user.id = record['id']
-      user.name = record['name']
-      user.username = record['username']
-      user.email = record['email']
-      user.password = record['password']
-      users << user
-    end
-    return users
-  end
-
-  def find_by_id(id)
-    sql = "SELECT id, name, username, email, password FROM users WHERE id = $1"
-    result_set = DatabaseConnection.exec_params(sql, [id])
-    record = result_set[0]
+  def convert_to_user(record)
     user = User.new
     user.id = record['id']
     user.name = record['name']
     user.username = record['username']
     user.email = record['email']
     user.password = record['password']
+    user.spaces = []
 
     return user
+    
+  end
+
+  def all
+    users = []
+    sql = "SELECT id, name, username, email, password FROM users"
+    
+    result_set = DatabaseConnection.exec_params(sql, [])
+
+    return result_set.map(&method(:convert_to_user))
+
+  end
+
+  def find_by_id(id)
+    sql = "SELECT id, name, username, email, password FROM users WHERE id = $1"
+    result_set = DatabaseConnection.exec_params(sql, [id])
+
+    return convert_to_user(result_set[0])
   end
 
   def find_by_id_with_spaces(id)
@@ -47,8 +46,6 @@ class UserRepository
     user.username = record['username']
     user.email = record['email']
     user.password = record['password']
-
-    user.spaces = []
 
     result_set.each do |record|
       space = Space.new
