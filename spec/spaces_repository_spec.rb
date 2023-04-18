@@ -50,5 +50,8 @@ describe SpacesRepository do
     expect(all_spaces.length).to eq 7
     expect(all_spaces.last.name).to eq "Bowser's Palace"
     expect(all_spaces.last.owner_id).to eq 4
+    expected_dates = ['2023-5-4', '1994-7-9']
+    expect(all_spaces.last.available_dates).to eq (expected_dates.map { |date| Date.parse(date) })
+
   end
 end
