@@ -6,15 +6,20 @@ class UserRepository
 
   def convert_to_user(record)
     user = User.new
-    user.id = record['id']
+    user.id = record['id'].to_i
     user.name = record['name']
     user.username = record['username']
     user.email = record['email']
     user.password = record['password']
-    user.spaces = []
 
     return user
-    
+    end
+
+  def convert_to_date_objects(dates_string)
+    # SQL query of the "available_dates" col returns a single string formatted as: "{YYYY-MM-DD,YYY-MM-DD}"
+    date_array = dates_string[1..-2].split(',')
+
+    return date_array.map { |date| Date.parse(date) }
   end
 
   def all
@@ -41,7 +46,7 @@ class UserRepository
     
     record = result_set[0]
     user = User.new
-    user.id = record['user_id']
+    user.id = record['user_id'].to_i
     user.name = record['full_name']
     user.username = record['username']
     user.email = record['email']
@@ -49,11 +54,11 @@ class UserRepository
 
     result_set.each do |record|
       space = Space.new
-      space.id = record['space_id']
+      space.id = record['space_id'].to_i
       space.name = record['space_name']
       space.description = record['description']
-      space.price_per_night = record['price_per_night']
-      space.available_dates = record['available_dates']
+      space.price_per_night = record['price_per_night'].to_f.round(2)
+      space.available_dates = convert_to_date_objects(record['available_dates'])
 
       user.spaces << space
     end

@@ -19,14 +19,14 @@ describe UserRepository do
 
     expect(users.length).to eq 5
 
-    expect(users[0].id).to eq '1'
+    expect(users[0].id).to eq 1
     expect(users[0].name).to eq 'Sam'
     expect(users[0].username).to eq 'usersam'
     expect(users[0].email).to eq 'sam@email.com'
     expect(users[0].password).to eq 'sampassword'
 
 
-    expect(users[1].id).to eq '2'
+    expect(users[1].id).to eq 2
     expect(users[1].name).to eq 'Gary'
     expect(users[1].username).to eq 'usergary'
     expect(users[1].email).to eq 'gary@email.com'
@@ -40,7 +40,7 @@ describe UserRepository do
 
     user = repo.find_by_id(1)
 
-    expect(user.id).to eq '1'
+    expect(user.id).to eq 1
     expect(user.name).to eq 'Sam'
     expect(user.username).to eq 'usersam'
     expect(user.email).to eq 'sam@email.com'
