@@ -46,15 +46,15 @@ describe Application do
         follow_redirect!
         expect(last_request.path).to eq('/spaces')
         expect(last_request.env['rack.session'][:user]).to be_an_instance_of User
-        expect(last_request.env['rack.session'][:user.username]).to eq "usersam"
-        expect(last_request.env['rack.session'][:user.id]).to eq 1
+        expect(last_request.env['rack.session'][:user].username).to eq "usersam"
+        expect(last_request.env['rack.session'][:user].id).to eq 1
       end
     end
 
     context 'when user submits invalid password' do
       it "displays error message" do
         response = post('/login_attempt', { email: "sam@email.com", password: "notthepassword" })
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(401)
         expect(response.body).to include('<h1>Login Denied</h1>')
         expect(response.body).to include('<a href="/login">Retry login here</a>')
       end
@@ -63,8 +63,8 @@ describe Application do
     context 'when user submits invalid email' do
       it "displays error message" do
         response = post('/login_attempt', { email: "not_a_user@example.com", password: "sampassword" })
-        expect(response.status).to eq(200)
-        expect(response.body).to include('<h1>Login denied</h1>')
+        expect(response.status).to eq(401)
+        expect(response.body).to include('<h1>Login Denied</h1>')
         expect(response.body).to include('<a href="/login">Retry login here</a>')
       end
     end

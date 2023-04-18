@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require 'sinatra/reloader'
-require_relative './lib/users_repository'
+require_relative './lib/user_repository'
 
 class Application < Sinatra::Base
   enable :sessions
@@ -18,17 +18,19 @@ class Application < Sinatra::Base
   end
 
   post '/login_attempt' do
-    # email = params[:email]
-    # password = params[:password]
+    # user_record = UserRepository.new.find_by_email(params[:email]) 
+    repo = UserRepository.new
+    user_record = repo.find_by_email(params[:email])
 
-    user_repo = UserRepository.new
+    return deny_login if user_record.nil?
+    # deny_login unless params[:password] == user_record.password
 
-    user_record = user_repo.find_by_email(params[:email]) 
-
-    deny_login if user_record.nil? || params[:password] != user_record.password
-
-    session[:user] = user_record
-    return redirect('/spaces')
+    if params[:password] == user_record.password
+      session[:user] = user_record
+      return redirect('/spaces')
+    else
+      deny_login
+    end
   end
 
   def deny_login
