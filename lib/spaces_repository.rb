@@ -6,39 +6,28 @@ class SpacesRepository
     sql = 'SELECT * FROM spaces;'
     result_set = DatabaseConnection.exec_params(sql, [])
 
-    spaces = []
-
-    result_set.each do |record|
-      space = convert_to_space_object(record)
-      spaces << space
-    end
-
-    return spaces
+    return result_set.map(&method(:convert_to_space))
   end
 
   def find_by_id(id) # One argument: the id (number)
     sql = 'SELECT * FROM spaces WHERE id = $1;'
-    result_set = DatabaseConnection.exec_params(sql, [id]).first
+    result = DatabaseConnection.exec_params(sql, [id]).first
 
-    space = convert_to_space_object(result_set)
-
-    return space
+    return convert_to_space(result)
   end
 
   def create(space)
     sql = 'INSERT INTO spaces (name, description, price_per_night, owner_id, available_dates)
           VALUES ($1, $2, $3, $4, $5);'
-    
 
     params = [space.name, space.description, space.price_per_night, space.owner_id, 
               convert_date_objects_to_string(space.available_dates)]
 
     DatabaseConnection.exec_params(sql, params)
-
     return nil
   end
 
-  def convert_to_space_object(record)
+  def convert_to_space(record)
     space = Space.new
     space.id = record['id'].to_i
     space.name = record['name']
@@ -53,11 +42,9 @@ class SpacesRepository
   def convert_to_date_objects(dates_string)
     # SQL query of the "available_dates" col returns a single string formatted as: "{YYYY-MM-DD,YYY-MM-DD}"
     date_array = dates_string[1..-2].split(',')
-    return date_array.map do |date|
-      Date.parse(date)
-    end
-  end
 
+    return date_array.map { |date| Date.parse(date) }
+  end
 
   def convert_date_objects_to_string(dates_array)
     available_dates_string = dates_array.map { |date| date.to_s }.join(',')
