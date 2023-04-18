@@ -51,7 +51,6 @@ class UserRepository
     user.spaces = []
 
     result_set.each do |record|
-      p record
       space = Space.new
       space.id = record['space_id']
       space.name = record['space_name']
