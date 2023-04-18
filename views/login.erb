@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login | MakersBnB</title>
+
+        <!--
+            Head to https://github.com/makersacademy/web-applications/blob/main/pills/loading_css_or_static_files.md
+            If you're wondering how the CSS file below is being loaded.
+        -->
+        <link rel="stylesheet" href="/style.css" >
+    </head>
+    <body>
+        <h1>Login to MakersBnB</h1>
+        <form method="POST" action="/login_attempt">
+          <label for="email">Email Address:</label>
+          <input type="text" name="email" />
+          <label for="password">Password:</label>
+          <input type="password" name="password" />
+          <input type="submit" />
+        </form>
+    </body>
+</html>
