@@ -18,19 +18,13 @@ class Application < Sinatra::Base
   end
 
   post '/login_attempt' do
-    # user_record = UserRepository.new.find_by_email(params[:email]) 
     repo = UserRepository.new
     user_record = repo.find_by_email(params[:email])
 
-    return deny_login if user_record.nil?
-    # deny_login unless params[:password] == user_record.password
+    return deny_login unless user_record && params[:password] == user_record.password
 
-    if params[:password] == user_record.password
-      session[:user] = user_record
-      return redirect('/spaces')
-    else
-      deny_login
-    end
+    session[:user] = user_record
+    return redirect('/spaces')
   end
 
   def deny_login
