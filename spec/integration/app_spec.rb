@@ -52,6 +52,7 @@ describe Application do
       expect(new_space.name).to eq 'Sunny Shores'
       expect(new_space.owner_id).to eq 2
       expect(new_space.available_dates.length).to eq 3
+      expect(new_space.available_dates[1]).to eq Date.parse('2024-4-17')
     end
   end
 end

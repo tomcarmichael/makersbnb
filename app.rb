@@ -26,8 +26,8 @@ class Application < Sinatra::Base
     space.name=params['name']
     space.description=params['description']
     space.price_per_night=params['price']
-    start_date = Date.parse(params['start_date'][1..-2])
-    end_date = Date.parse(params['end_date'][1..-2])
+    start_date = Date.parse(params['start_date'])
+    end_date = Date.parse(params['end_date'])
     space.available_dates = (start_date..end_date).to_a
     # Needs to be changed to session ID when available
     space.owner_id = 2
