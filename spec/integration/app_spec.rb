@@ -115,6 +115,14 @@ describe Application do
   end
 
   context 'GET /requests' do
+    it "gets all the requests made to a users' spaces" do
+      post('/login_attempt', { email: "gary@email.com", password: "garypassword" })
+      response = get('/requests')
+
+      expect(response.body).to include 'Space ID: 2'
+      expect(response.body).to include 'Space ID: 3'
+    end
+
     it "gets all the requests made by a user" do
       post('/login_attempt', { email: "jack@email.com", password: "jackpassword" })
       response = get('/requests')
@@ -122,6 +130,5 @@ describe Application do
       expect(response.body).to include 'Space ID: 1'
       expect(response.body).to include 'Space ID: 2'
     end
-
   end
 end

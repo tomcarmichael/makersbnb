@@ -107,4 +107,15 @@ RSpec.describe RequestRepository do
       expect(requests.first.date).to eq Date.parse('2023-4-17')
     end
   end
+
+  context '#find_requests_for_user' do
+    it "finds all requests that pertain to a user id" do
+      requests = repo.find_requests_for_user(2)
+
+      expect(requests.first.space_id).to eq 2
+      expect(requests.first.date).to eq Date.parse('2023-3-18')
+      expect(requests.last.space_id).to eq 3
+      expect(requests.last.date).to eq Date.parse('2023-4-1')
+    end
+  end
 end

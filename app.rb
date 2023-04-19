@@ -38,8 +38,6 @@ class Application < Sinatra::Base
     return erb(:login_denied)
   end
 
-
-
   get '/spaces' do
     @spaces = SpacesRepository.new.all
     return erb(:spaces)
@@ -71,6 +69,7 @@ class Application < Sinatra::Base
 
   get '/requests' do
     repo = RequestRepository.new
+    @requests = repo.find_requests_for_user(session[:user].id)
     @requests_by_me = repo.find_by_requester_id(session[:user].id)
 
     return erb(:requests)
