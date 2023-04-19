@@ -113,4 +113,15 @@ describe Application do
       expect(new_space.available_dates[1]).to eq Date.parse('2024-4-17')
     end
   end
+
+  context 'GET /requests' do
+    it "gets all the requests made to a users' spaces" do
+      post('/login_attempt', { email: "gary@email.com", password: "garypassword" })
+      response = get('/requests')
+
+      expect(response.body).to include 'Space ID: 2'
+      expect(response.body).to include 'Space ID: 3'
+    end
+
+  end
 end
