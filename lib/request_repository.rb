@@ -1,11 +1,12 @@
 require_relative './request'
+require 'helpers'
 
 class RequestRepository
   def all
     sql = 'SELECT * FROM requests'
     result_set = DatabaseConnection.exec_params(sql, [])
     
-    return result_set.map(&method(:record_to_request))
+    return result_set.map(&Helper.method(:record_to_request))
   end
 
   def create(request)
@@ -29,7 +30,7 @@ class RequestRepository
     params = [requester_id]
 
     result_set = DatabaseConnection.exec_params(sql, params)
-    return result_set.map(&method(:record_to_request))
+    return result_set.map(&Helper.method(:record_to_request))
   end
 
   def find_by_space_id(space_id)
@@ -37,7 +38,7 @@ class RequestRepository
     params = [space_id]
 
     result_set = DatabaseConnection.exec_params(sql, params)
-    return result_set.map(&method(:record_to_request))
+    return result_set.map(&Helper.method(:record_to_request))
   end
 
   def find_by_id(space_id)
@@ -45,7 +46,7 @@ class RequestRepository
     params = [space_id]
 
     result_set = DatabaseConnection.exec_params(sql, params)
-    return record_to_request(result_set.first)
+    return Helper.record_to_request(result_set.first)
   end
 
   def find_by_place_id_and_date(space_id, date)
@@ -53,7 +54,7 @@ class RequestRepository
     params = [space_id, date]
 
     result_set = DatabaseConnection.exec_params(sql, params)
-    return result_set.map(&method(:record_to_request))
+    return result_set.map(&Helper.method(:record_to_request))
   end
 
   def find_requests_for_user(user_id) 
@@ -61,16 +62,8 @@ class RequestRepository
     params = [user_id]
 
     result_set = DatabaseConnection.exec_params(sql, params)
-    return result_set.map(&method(:record_to_request))
+    return result_set.map(&Helper.method(:record_to_request))
   end
   
-  def record_to_request(record)
-    request = Request.new
-    request.id = record['id'].to_i
-    request.space_id = record['space_id'].to_i
-    request.requester_id = record['requester_id'].to_i
-    request.date = Date.parse(record['date'])
-    request.status = record['status']
-    return request
-  end
+  
 end
