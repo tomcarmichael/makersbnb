@@ -79,7 +79,7 @@ class Application < Sinatra::Base
     repo = SpacesRepository.new
     @space = repo.find_by_id(params[:id])
     
-    if 
+    return redirect('/spaces') unless @space
 
     erb(:space)
   end

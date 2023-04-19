@@ -15,7 +15,7 @@
       <label for="date">Select a date:</label>
       <select name="date">
       <% @space.available_dates.each do |date|%>
-        <option value="<%= @space.date %>"><%= @space.date %></option>
+        <option value="<%= date %>"><%= date %></option>
       <% end %>
       </select>
     </form>

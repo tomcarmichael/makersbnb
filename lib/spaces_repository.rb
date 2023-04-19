@@ -28,6 +28,8 @@ class SpacesRepository
   end
 
   def convert_to_space(record)
+    return nil unless record
+
     space = Space.new
     space.id = record['id'].to_i
     space.name = record['name']
