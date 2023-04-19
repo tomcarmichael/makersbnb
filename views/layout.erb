@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @title %></title>
+</head>
+<body>
+
+<nav>
+<% if session[:user]%>
+  <%= current_page?("spaces") ? 'Spaces' : '<a href="/spaces">Spaces</a>'%>
+  <%= current_page?("requests") ? 'Requests' : '<a href="/requests">Requests</a>'%>
+  <%= current_page?("logout") ? 'Log out' : '<a href="/logout">Log out</a>'%>
+<% end %>
+
+<% if !session[:user]%>
+  <%= current_page?("login") ? 'Log in' : '<a href="/login">Log in</a>'%>
+  <%= current_page?("about") ? 'About' : '<a href="/about">About</a>'%>
+<% end %>
+</nav>
+
+  <%= yield %>
+</body>
+</html>
