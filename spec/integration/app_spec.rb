@@ -131,4 +131,33 @@ describe Application do
       expect(response.body).to include 'Space ID: 2'
     end
   end
+
+  context "GET /spaces/2" do
+    it "Displays a space by ID with name & description" do
+      response = get('/spaces/2')
+      expect(response.status).to eq 200
+      expect(response.body).to include("<h1>Scary fields</h1>") 
+      expect(response.body).to include("A scary field") 
+    end
+
+    it "Displays available dates" do
+      response = get('/spaces/2')
+      expect(response.status).to eq 200
+      expect(response.body).to include('<label for="date">Select a date:</label>')
+      expect(response.body).to include('<select name="date">') 
+      expect(response.body).to include('<option value="2023-03-16">2023-03-16</option>')
+      expect(response.body).to include('<option value="2023-03-17">2023-03-17</option>')
+      expect(response.body).to include('<option value="2023-03-18">2023-03-18</option>')
+    end
+  end
+
+  context "GET /spaces/300 (invalid ID)" do
+    it "redirects to the spaces page" do
+      response = get('/spaces/300')
+      expect(response.status).to eq 302
+      follow_redirect!
+      expect(last_request.path).to eq('/spaces')
+    end
+  end
+  
 end

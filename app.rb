@@ -73,6 +73,16 @@ class Application < Sinatra::Base
 
     return erb(:requests)
   end
+
+  get '/spaces/:id' do
+    repo = SpacesRepository.new
+    @space = repo.find_by_id(params[:id])
+    
+    return redirect('/spaces') unless @space
+
+    erb(:space)
+  end
+
   
   helpers do
     def current_page?(path='')

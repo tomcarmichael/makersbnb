@@ -26,15 +26,22 @@ describe SpacesRepository do
     expect(spaces.last.owner_id).to eq 4
   end
 
-  it "finds a single space by ID" do
-    space = repo.find_by_id(3)
-    expect(space.id).to eq 3
-    expect(space.name).to eq 'Melancholy marsh'
-    expect(space.price_per_night).to eq 10.50
-    expect(space.owner_id).to eq 2
-    expected_dates = ['2023-4-1', '2023-4-2', '2023-4-7']
-    expect(space.available_dates).to eq (expected_dates.map { |date| Date.parse(date) })
+  context "#find_by_id" do
+    it "finds a single space by ID" do
+      space = repo.find_by_id(3)
+      expect(space.id).to eq 3
+      expect(space.name).to eq 'Melancholy marsh'
+      expect(space.price_per_night).to eq 10.50
+      expect(space.owner_id).to eq 2
+      expected_dates = ['2023-4-1', '2023-4-2', '2023-4-7']
+      expect(space.available_dates).to eq (expected_dates.map { |date| Date.parse(date) })
+    end
+
+    it "returns nil when given an invalid ID" do
+      expect(repo.find_by_id(0)).to eq nil
+    end
   end
+
 
   it "inserts a new Space into the DB" do
     space = Space.new

@@ -1,5 +1,6 @@
 class Helper
   def self.record_to_request(record)
+    return nil unless record
     request = Request.new
     request.id = record['id'].to_i
     request.space_id = record['space_id'].to_i
@@ -22,6 +23,7 @@ class Helper
   end
 
   def self.convert_to_space(record)
+    return nil unless record
     space = Space.new
     space.id = record['id'].to_i
     space.name = record['name']
@@ -34,7 +36,7 @@ class Helper
   end
 
   def self.convert_to_user(record)
-    return nil if record.nil?
+    return nil unless record
 
     user = User.new
     user.id = record['id'].to_i
