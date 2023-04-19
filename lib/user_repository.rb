@@ -5,6 +5,8 @@ require_relative './space'
 class UserRepository
 
   def convert_to_user(record)
+    return nil if record.nil?
+
     user = User.new
     user.id = record['id'].to_i
     user.name = record['name']
@@ -13,7 +15,7 @@ class UserRepository
     user.password = record['password']
 
     return user
-    end
+  end
 
   def convert_to_date_objects(dates_string)
     # SQL query of the "available_dates" col returns a single string formatted as: "{YYYY-MM-DD,YYY-MM-DD}"
@@ -64,6 +66,15 @@ class UserRepository
     end
     return user
   end
+
+  def find_by_email(email)
+    sql = 'SELECT * FROM users WHERE email = $1;'
+    params = [email]
+    result = DatabaseConnection.exec_params(sql, params).first
+
+    return convert_to_user(result)
+  end
+  
   #     # left in as could possibly be useful with integration:
   # def all_with_spaces
   #   users_with_spaces = []
