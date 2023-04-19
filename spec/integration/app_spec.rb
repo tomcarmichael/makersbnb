@@ -35,6 +35,19 @@ describe Application do
     end
   end
 
+  context "GET /spaces" do
+    it 'returns a list of spaces' do
+      response = get("/spaces")
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include "<h3>Book a Space</h3>"
+      expect(response.body).to include "Happy meadows"
+      expect(response.body).to include "A happy place"
+      expect(response.body).to include "Scary fields"
+      expect(response.body).to include "A scary field"
+    end
+  end
+  
   context 'GET /login' do
     it "displays a login form" do
       response = get('/login')

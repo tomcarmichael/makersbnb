@@ -1,15 +1,21 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Spaces | MakersBnB</title>
-
-        <!--
-            Head to https://github.com/makersacademy/web-applications/blob/main/pills/loading_css_or_static_files.md
-            If you're wondering how the CSS file below is being loaded.
-        -->
-        <link rel="stylesheet" href="/style.css" >
-    </head>
-    <body>
-        <p>This is the spaces page.</p>
-    </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spaces</title>
+  <link rel="stylesheet" href="/style.css" >
+</head>
+<body>
+  <h3>Book a Space</h3>
+  <% @spaces.each do |space| %>
+    <a href="/spaces/<%= space.id %>">
+      <div>
+        <%= space.name %><br>
+        <%= space.description %>
+      </div>
+    </a><br />
+  <% end %>
+</body>
 </html>

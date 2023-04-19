@@ -9,6 +9,8 @@ class Application < Sinatra::Base
 
   configure :development do
     register Sinatra::Reloader
+    also_reload 'lib/spaces_repository'
+    also_reload 'lib/user_repository'
   end
 
   get '/' do
@@ -34,7 +36,10 @@ class Application < Sinatra::Base
     return erb(:login_denied)
   end
 
+
+
   get '/spaces' do
+    @spaces = SpacesRepository.new.all
     return erb(:spaces)
   end
 
@@ -61,4 +66,6 @@ class Application < Sinatra::Base
     
     return redirect '/'
   end
+
+  
 end
