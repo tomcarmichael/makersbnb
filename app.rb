@@ -35,11 +35,6 @@ class Application < Sinatra::Base
     return redirect('/spaces')
   end
 
-  def deny_login
-    status 401
-    return erb(:login_denied)
-  end
-
   get '/spaces' do
     @title = "MakersBnB - Spaces"
     @spaces = SpacesRepository.new.all
@@ -79,7 +74,14 @@ class Application < Sinatra::Base
     return erb(:requests)
   end
   
-  def current_page?(path='')
-    request.path_info == '/' + path
+  helpers do
+    def current_page?(path='')
+      request.path_info == '/' + path
+    end
+    
+    def deny_login
+      status 401
+      return erb(:login_denied)
+    end
   end
 end
