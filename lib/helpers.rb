@@ -45,5 +45,9 @@ class Helper
 
     return user
   end
+
+  def self.current_page?(path='')
+    request.path_info == '/' + path
+  end
 end
 
