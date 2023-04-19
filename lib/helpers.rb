@@ -33,5 +33,17 @@ class Helper
     return space
   end
 
+  def self.convert_to_user(record)
+    return nil if record.nil?
+
+    user = User.new
+    user.id = record['id'].to_i
+    user.name = record['name']
+    user.username = record['username']
+    user.email = record['email']
+    user.password = record['password']
+
+    return user
+  end
 end
 
