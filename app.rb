@@ -3,6 +3,7 @@ require 'sinatra/reloader'
 require_relative './lib/user_repository'
 require_relative './lib/space'
 require_relative './lib/spaces_repository'
+require_relative './lib/request_repository'
 
 class Application < Sinatra::Base
   enable :sessions
@@ -11,6 +12,7 @@ class Application < Sinatra::Base
     register Sinatra::Reloader
     also_reload 'lib/spaces_repository'
     also_reload 'lib/user_repository'
+    also_reload 'lib/requests_repository'
   end
 
   get '/' do
@@ -35,8 +37,6 @@ class Application < Sinatra::Base
     status 401
     return erb(:login_denied)
   end
-
-
 
   get '/spaces' do
     @spaces = SpacesRepository.new.all
@@ -67,5 +67,12 @@ class Application < Sinatra::Base
     return redirect '/'
   end
 
+  get '/requests' do
+    repo = RequestRepository.new
+    @requests = repo.find_requests_for_user(session[:user].id)
+    
+
+    return erb(:requests)
+  end
   
 end

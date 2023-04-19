@@ -55,6 +55,14 @@ class RequestRepository
     result_set = DatabaseConnection.exec_params(sql, params)
     return result_set.map(&method(:record_to_request))
   end
+
+  def find_requests_for_user(user_id) 
+    sql = 'SELECT requests.id, requests.space_id, requests.requester_id, requests.date, requests.status, spaces.owner_id FROM requests JOIN spaces ON requests.space_id = spaces.id WHERE spaces.owner_id = $1'
+    params = [user_id]
+
+    result_set = DatabaseConnection.exec_params(sql, params)
+    return result_set.map(&method(:record_to_request))
+  end
   
   def record_to_request(record)
     request = Request.new
