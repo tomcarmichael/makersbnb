@@ -16,10 +16,12 @@ class Application < Sinatra::Base
   end
 
   get '/' do
+    @title = "MakersBnB"
     return erb(:index)
   end
 
   get '/login' do
+    @title = "MakersBnB - Login"
     return erb(:login)
   end
 
@@ -33,19 +35,15 @@ class Application < Sinatra::Base
     return redirect('/spaces')
   end
 
-  def deny_login
-    status 401
-    return erb(:login_denied)
-  end
-
   get '/spaces' do
+    @title = "MakersBnB - Spaces"
     @spaces = SpacesRepository.new.all
     return erb(:spaces)
   end
 
 
   get '/spaces/new' do
-    
+    @title = "MakersBnB - List a space"
     return erb(:list_space_new)
   end
 
@@ -68,6 +66,7 @@ class Application < Sinatra::Base
   end
 
   get '/requests' do
+    @title = "MakersBnB - Requests"
     repo = RequestRepository.new
     @requests = repo.find_requests_for_user(session[:user].id)
     @requests_by_me = repo.find_by_requester_id(session[:user].id)
@@ -85,4 +84,14 @@ class Application < Sinatra::Base
   end
 
   
+  helpers do
+    def current_page?(path='')
+      request.path_info == '/' + path
+    end
+    
+    def deny_login
+      status 401
+      return erb(:login_denied)
+    end
+  end
 end

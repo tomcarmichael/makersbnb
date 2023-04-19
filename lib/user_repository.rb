@@ -3,34 +3,13 @@ require_relative './spaces_repository'
 require_relative './space'
 
 class UserRepository
-
-  def convert_to_user(record)
-    return nil if record.nil?
-
-    user = User.new
-    user.id = record['id'].to_i
-    user.name = record['name']
-    user.username = record['username']
-    user.email = record['email']
-    user.password = record['password']
-
-    return user
-  end
-
-  def convert_to_date_objects(dates_string)
-    # SQL query of the "available_dates" col returns a single string formatted as: "{YYYY-MM-DD,YYY-MM-DD}"
-    date_array = dates_string[1..-2].split(',')
-
-    return date_array.map { |date| Date.parse(date) }
-  end
-
   def all
     users = []
     sql = "SELECT id, name, username, email, password FROM users"
     
     result_set = DatabaseConnection.exec_params(sql, [])
 
-    return result_set.map(&method(:convert_to_user))
+    return result_set.map(&Helper.method(:convert_to_user))
 
   end
 
@@ -38,7 +17,7 @@ class UserRepository
     sql = "SELECT id, name, username, email, password FROM users WHERE id = $1"
     result_set = DatabaseConnection.exec_params(sql, [id])
 
-    return convert_to_user(result_set[0])
+    return Helper.convert_to_user(result_set[0])
   end
 
   def find_by_id_with_spaces(id)
@@ -60,7 +39,7 @@ class UserRepository
       space.name = record['space_name']
       space.description = record['description']
       space.price_per_night = record['price_per_night'].to_f.round(2)
-      space.available_dates = convert_to_date_objects(record['available_dates'])
+      space.available_dates = Helper.convert_to_date_objects(record['available_dates'])
 
       user.spaces << space
     end
@@ -72,7 +51,7 @@ class UserRepository
     params = [email]
     result = DatabaseConnection.exec_params(sql, params).first
 
-    return convert_to_user(result)
+    return Helper.convert_to_user(result)
   end
   
   #     # left in as could possibly be useful with integration:
