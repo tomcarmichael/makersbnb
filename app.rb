@@ -3,6 +3,7 @@ require 'sinatra/reloader'
 require_relative './lib/user_repository'
 require_relative './lib/space'
 require_relative './lib/spaces_repository'
+require_relative './lib/request_repository'
 
 class Application < Sinatra::Base
   enable :sessions
@@ -11,6 +12,7 @@ class Application < Sinatra::Base
     register Sinatra::Reloader
     also_reload 'lib/spaces_repository'
     also_reload 'lib/user_repository'
+    also_reload 'lib/request_repository'
   end
 
   get '/' do
@@ -67,5 +69,11 @@ class Application < Sinatra::Base
     return redirect '/'
   end
 
+  get '/requests' do
+    repo = RequestRepository.new
+    @requests_by_me = repo.find_by_requester_id(session[:user].id)
+
+    return erb(:requests)
+  end
   
 end
