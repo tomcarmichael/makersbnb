@@ -19,5 +19,16 @@
       </div>
     </a><br />
   <% end %>
+  <h3>Requests by me</h3>
+  <% @requests_by_me.each do |request| %>
+    <a href="/request/<%= request.id %>">
+      <div>
+          Space ID: <%= request.space_id %><br>
+          Requester ID: <%= request.requester_id %><br>
+          date: <%= request.date %><br>
+          Status: <%= request.status %><br>
+      </div>
+    </a><br />
+  <% end %>
 </body>
 </html>

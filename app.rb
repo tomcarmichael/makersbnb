@@ -12,7 +12,7 @@ class Application < Sinatra::Base
     register Sinatra::Reloader
     also_reload 'lib/spaces_repository'
     also_reload 'lib/user_repository'
-    also_reload 'lib/requests_repository'
+    also_reload 'lib/request_repository'
   end
 
   get '/' do
@@ -70,7 +70,7 @@ class Application < Sinatra::Base
   get '/requests' do
     repo = RequestRepository.new
     @requests = repo.find_requests_for_user(session[:user].id)
-    
+    @requests_by_me = repo.find_by_requester_id(session[:user].id)
 
     return erb(:requests)
   end
