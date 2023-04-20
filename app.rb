@@ -92,7 +92,7 @@ class Application < Sinatra::Base
 
     request.space_id = params[:id]
     request.requester_id = session[:user].id
-    request.date = params[:date]
+    request.date = Date.parse(params[:date])
     request.status = 'requested'
 
     repo.create(request)
