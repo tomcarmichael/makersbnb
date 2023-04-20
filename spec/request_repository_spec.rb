@@ -121,12 +121,19 @@ RSpec.describe RequestRepository do
 
   context '#find_request_info_by_id' do
     it 'finds correct data pertaining to a request id' do
-
-    request = repo.find_request_info_by_id(2)
-    expect(request[:name]).to eq("Happy meadows") 
-    expect(request[:description]).to eq("A happy place") 
-    expect(request[:email]).to eq('jack@email.com')
-    expect(request[:date]).to eq(Date.parse('2023-4-17')) 
+      request = repo.find_request_info_by_id(2)
+      expect(request[:name]).to eq("Happy meadows") 
+      expect(request[:description]).to eq("A happy place") 
+      expect(request[:email]).to eq('jack@email.com')
+      expect(request[:date]).to eq(Date.parse('2023-4-17')) 
     end
+
+    it 'returns the owner_id of the space that was requested' do
+      request = repo.find_request_info_by_id(2)
+      expect(request[:owner_id]).to eq 1
+      request = repo.find_request_info_by_id(4)
+      expect(request[:owner_id]).to eq 2
+    end
+    
   end
 end
