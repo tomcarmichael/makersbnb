@@ -134,6 +134,29 @@ RSpec.describe RequestRepository do
       request = repo.find_request_info_by_id(4)
       expect(request[:owner_id]).to eq 2
     end
-    
+
+    it 'returns the request_id of the space that was requested' do
+      request = repo.find_request_info_by_id(2)
+      expect(request[:request_id]).to eq 2
+      request = repo.find_request_info_by_id(4)
+      expect(request[:request_id]).to eq 4
+    end
+  end
+
+  context '#reject_request' do
+    it "Updates request status to 'rejected' by ID & returns nil" do
+      request_id = 4
+      request_before_reject = repo.find_by_id(request_id)
+      expect(request_before_reject.status).to eq 'requested'
+
+      repo.reject_request(request_id)
+      
+      updated_request = repo.find_by_id(request_id)
+      expect(updated_request.status).to eq 'rejected'
+    end
+
+    it "returns nil" do
+      expect(repo.reject_request(4)).to eq nil
+    end
   end
 end

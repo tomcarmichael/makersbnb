@@ -183,10 +183,26 @@ describe Application do
       expect(response.body).to include('<form method="post" action="/deny_request">') 
     end
 
-    it 'doesnt display button to deny request if user is not the space owner' do
+    it 'fails to display button to deny request if user is not the space owner' do
       response = get('/requests/2')
       expect(response.status).to eq(200)
       expect(response.body).not_to include('<form method="post" action="/deny_request">') 
+    end
+  end
+
+  context "POST /deny_request" do
+    it "updates the request to 'rejected in the DB'" do
+      request = RequestRepository.new.find_by_id(4)
+      expect(request.status).to eq "requested"
+      response = post('/deny_request', { request_id: 4 } )
+      request = RequestRepository.new.find_by_id(4)
+      expect(request.status).to eq "rejected"
+    end
+    it "redirects to /requests" do
+      response = post('/deny_request', { request_id: 4 } )
+      expect(response.status).to eq(302)
+      follow_redirect!
+      expect(last_request.path).to eq ('/requests')
     end
   end
     # GET /spaces/300
