@@ -11,7 +11,7 @@
 <% end %>
 <h3>Requests by me</h3>
 <% @requests_by_me.each do |request| %>
-  <div onclick="location.href='/requests/<%= request.id %>'" style="cursor:pointer">
+  <div onclick="location.href='/spaces/<%= request.space_id %>'" style="cursor:pointer">
       Space ID: <%= request.space_id %><br>
       Requester ID: <%= request.requester_id %><br>
       date: <%= request.date %><br>

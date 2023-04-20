@@ -185,4 +185,33 @@ describe Application do
       expect(last_request.env['rack.session'][:user]).to be_nil
     end
   end 
+  context 'GET /requests/:id' do
+    it 'returns the correct request page' do
+    response = get('/requests/2')
+
+    expect(response.status).to eq 200
+    expect(response.body).to include("<h1>Request for Happy meadows</h1>") 
+    expect(response.body).to include("A happy place") 
+    expect(response.body).to include('From: jack@email.com')
+    expect(response.body).to include('Date: 2023-04-17') 
+    end
+  end
+
+  context 'POST /spaces/:id' do
+    it 'adds the request to the requests table' do
+      # Logs in as gary
+      post('/login_attempt', { email: "gary@email.com", password: "garypassword" })
+
+      response = post('/spaces/1', date: '2023-4-18')
+
+      repo = RequestRepository.new
+      
+      expect(repo.all.last.id).to eq 8
+      expect(repo.all.last.space_id).to eq 1
+      expect(repo.all.last.requester_id).to eq 2
+      expect(repo.all.last.date).to eq Date.parse('2023-4-18')
+      expect(repo.all.last.status).to eq 'requested'
+    end
+  end
+
 end

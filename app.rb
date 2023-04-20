@@ -4,6 +4,8 @@ require_relative './lib/user_repository'
 require_relative './lib/space'
 require_relative './lib/spaces_repository'
 require_relative './lib/request_repository'
+require_relative './lib/request'
+require_relative './lib/helpers'
 
 class Application < Sinatra::Base
   enable :sessions
@@ -13,6 +15,7 @@ class Application < Sinatra::Base
     also_reload 'lib/spaces_repository'
     also_reload 'lib/user_repository'
     also_reload 'lib/request_repository'
+    also_reload 'lib/helpers'
   end
 
   get '/' do
@@ -86,6 +89,26 @@ class Application < Sinatra::Base
   post '/logout' do 
     session[:user] = nil
     return redirect('/spaces')
+  end
+
+  post '/spaces/:id' do
+    request = Request.new
+    repo = RequestRepository.new
+
+    request.space_id = params[:id]
+    request.requester_id = session[:user].id
+    request.date = Date.parse(params[:date])
+    request.status = 'requested'
+
+    repo.create(request)
+
+    return redirect('/spaces')
+  end
+
+  get '/requests/:id' do
+    repo = RequestRepository.new
+    @request_data = repo.find_request_info_by_id(params[:id])
+    return erb(:single_request)
   end
   
   helpers do
