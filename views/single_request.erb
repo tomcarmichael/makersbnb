@@ -8,5 +8,7 @@
 <% if session[:user] && @request_data[:owner_id] == session[:user].id %>
   <div>
     <form method="post" action="/deny_request">
+      <button type="submit" name="deny_request" value="<%= @request_data[:request_id]%>" class="link-button">Deny Request from <%= @request_data[:email] %></button>
+    </form>
   </div>
 <% end %>
