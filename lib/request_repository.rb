@@ -1,5 +1,5 @@
 require_relative './request'
-require 'helpers'
+require_relative './helpers'
 
 class RequestRepository
   def all

@@ -5,3 +5,40 @@ body {
 .current-page {
     
 }
+
+/* Style the navigation menu */
+.nav_menu_links {
+    list-style: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 2rem;
+  }
+  
+  .nav_menu_links li {
+    margin-left: 1rem;
+    display: inline;
+  }
+  
+  .nav_menu_links li a {
+    text-decoration: none;
+    color: #1da1f2;
+    font-weight: bold;
+  }
+  
+  .nav_menu_links li a:hover {
+    text-decoration: underline;
+  }
+  
+  .link-button {
+    background: none;
+    border: none;
+    color: #1da1f2;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .link-button:hover {
+    text-decoration: underline;
+  }
+  
