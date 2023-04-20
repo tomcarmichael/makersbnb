@@ -4,3 +4,9 @@
   <p>From: <%= @request_data[:email] %></p>
   <p>Date: <%= @request_data[:date].to_s %></p>
 </div>
+
+<% if session[:user] && @request_data[:owner_id] == session[:user].id %>
+  <div>
+    <form method="post" action="/deny_request">
+  </div>
+<% end %>

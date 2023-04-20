@@ -160,6 +160,8 @@ describe Application do
     end
   end
 
+  
+
   context 'GET /requests/:id' do
     it 'returns the correct request page' do
     response = get('/requests/2')
@@ -171,14 +173,22 @@ describe Application do
     expect(response.body).to include('Date: 2023-04-17') 
     end
 
-    it 'displays a button to deny request' do
-      response = get('/requests/2')
+    it 'displays a button to deny request if user is the space owner' do
+      # Create Sam User object for test
+      fake_user = UserRepository.new.find_by_id(1)
+
+      # Request ID 2 is for a space Sam owns
+      response = get('/requests/2', {}, { 'rack.session' => { user: fake_user } })
+      expect(response.status).to eq(200)
       expect(response.body).to include('<form method="post" action="/deny_request">') 
     end
 
+    it 'doesnt display button to deny request if user is not the space owner' do
+      response = get('/requests/2')
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include('<form method="post" action="/deny_request">') 
+    end
   end
-
-  context ""
     # GET /spaces/300
 
     # expect(response.status).to eq 302
