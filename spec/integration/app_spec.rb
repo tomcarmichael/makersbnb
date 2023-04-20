@@ -175,7 +175,7 @@ describe Application do
       response = post("/logout")
       expect(response.status).to eq(302)
       follow_redirect!
-      expect(last_request.path).to eq('/')
+      expect(last_request.path).to eq('/spaces')
     end
    
     it "logs the user out from session object" do

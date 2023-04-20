@@ -83,6 +83,10 @@ class Application < Sinatra::Base
     erb(:space)
   end
 
+  post '/logout' do 
+    session[:user] = nil
+    return redirect('/spaces')
+  end
   
   helpers do
     def current_page?(path='')
