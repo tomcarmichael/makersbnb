@@ -1,44 +1,78 @@
 body {
     font-size: 18px;
+    font-family: arial, sans-serif;
 }
 
 .center {
-    margin:auto;
-    width: 50%;
+  margin:auto;
+  width: 50%;
 }
 
-
 .flex-container {
-    display: flex;
-    margin: auto;
-    margin-top: 10%;
-    width: 50%;
-    text-align: center;
+  display: flex;
+  margin: auto;
+  margin-top: 10%;
+  width: 50%;
+  text-align: center;
 }
 
 .flex-child {
-    flex: 1;
-    border: 2px;
-    padding: 10px;
-    position: relative;
-    margin: auto;
+  flex: 1;
+  border: 2px;
+  padding: 10px;
+  position: relative;
+  margin: auto;
 }  
 
 .scroller {
-    border: 2px solid #000000;
-    margin: auto;
-    overflow-x: hidden;
-    overflow-y: visible;
-    height: 320px;
+  border: 2px solid #000000;
+  margin: auto;
+  overflow-x: hidden;
+  overflow-y: visible;
+  height: 320px;
 }
 
 .request {
-    border-radius: 25px;
-    border: 2px solid #000000;
-    padding: 20px;
-    margin: auto;
-    margin-bottom: 20px;
-    margin-top: 10px;
-    width: 70%;
-    height: auto;
-  }
+  border-radius: 25px;
+  border: 2px solid #000000;
+  padding: 20px;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  width: 70%;
+  height: auto;
+}
+  
+.nav_menu_links {
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 2rem;
+}
+  
+.nav_menu_links li {
+  margin-left: 1rem;
+  display: inline;
+}
+  
+.nav_menu_links li a {
+  text-decoration: none;
+  color: #1da1f2;
+}
+  
+.nav_menu_links li a:hover {
+  text-decoration: underline;
+}
+  
+.link-button {
+  background: none;
+  border: none;
+  color: #1da1f2;
+  cursor: pointer;
+  font-size: 18px;
+}
+  
+.link-button:hover {
+  text-decoration: underline;
+}

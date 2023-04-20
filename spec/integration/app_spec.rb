@@ -160,6 +160,31 @@ describe Application do
     end
   end
 
+  let(:session_params) { { 'rack.session' => { user: double(:user_object) } } }
+
+  context "layout" do
+    it "displays a logout options via POST when user is logged in" do
+      response = get('/spaces', {}, session_params)
+      expect(response.body).to include('<form method="post" action="/logout"')
+      expect(response.body).to include('<button type="submit" name="logout" class="link-button">Log out</button>')
+    end
+  end
+
+  context "POST /logout" do
+    it 'redirects to home page' do
+      response = post("/logout")
+      expect(response.status).to eq(302)
+      follow_redirect!
+      expect(last_request.path).to eq('/spaces')
+    end
+   
+    it "logs the user out from session object" do
+      response = post('/logout', {}, session_params)
+      expect(response.status).to eq(302)
+      follow_redirect!
+      expect(last_request.env['rack.session'][:user]).to be_nil
+    end
+  end 
   context 'GET /requests/:id' do
     it 'returns the correct request page' do
     response = get('/requests/2')
@@ -171,10 +196,22 @@ describe Application do
     expect(response.body).to include('Date: 2023-04-17') 
     end
   end
-    # GET /spaces/300
 
-    # expect(response.status).to eq 302
-    # follow_redirect!
-    # expect(last_request.path).to eq('/spaces')
+  context 'POST /spaces/:id' do
+    it 'adds the request to the requests table' do
+      # Logs in as gary
+      post('/login_attempt', { email: "gary@email.com", password: "garypassword" })
+
+      response = post('/spaces/1', date: '2023-4-18')
+
+      repo = RequestRepository.new
+      
+      expect(repo.all.last.id).to eq 8
+      expect(repo.all.last.space_id).to eq 1
+      expect(repo.all.last.requester_id).to eq 2
+      expect(repo.all.last.date).to eq Date.parse('2023-4-18')
+      expect(repo.all.last.status).to eq 'requested'
+    end
+  end
 
 end
