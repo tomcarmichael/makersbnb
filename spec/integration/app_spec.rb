@@ -171,10 +171,22 @@ describe Application do
     expect(response.body).to include('Date: 2023-04-17') 
     end
   end
-    # GET /spaces/300
 
-    # expect(response.status).to eq 302
-    # follow_redirect!
-    # expect(last_request.path).to eq('/spaces')
+  context 'POST /spaces/:id' do
+    it 'adds the request to the requests table' do
+      # Logs in as gary
+      post('/login_attempt', { email: "gary@email.com", password: "garypassword" })
+
+      response = post('/spaces/1', date: '2023-4-18')
+
+      repo = RequestRepository.new
+      
+      expect(repo.all.last.id).to eq 8
+      expect(repo.all.last.space_id).to eq 1
+      expect(repo.all.last.requester_id).to eq 2
+      expect(repo.all.last.date).to eq Date.parse('2023-4-18')
+      expect(repo.all.last.status).to eq 'requested'
+    end
+  end
 
 end

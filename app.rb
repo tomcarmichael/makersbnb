@@ -4,6 +4,7 @@ require_relative './lib/user_repository'
 require_relative './lib/space'
 require_relative './lib/spaces_repository'
 require_relative './lib/request_repository'
+require_relative './lib/request'
 require_relative './lib/helpers'
 
 class Application < Sinatra::Base
@@ -83,6 +84,20 @@ class Application < Sinatra::Base
     return redirect('/spaces') unless @space
 
     erb(:space)
+  end
+
+  post '/spaces/:id' do
+    request = Request.new
+    repo = RequestRepository.new
+
+    request.space_id = params[:id]
+    request.requester_id = session[:user].id
+    request.date = params[:date]
+    request.status = 'requested'
+
+    repo.create(request)
+
+    return redirect('/spaces')
   end
 
   get '/requests/:id' do
