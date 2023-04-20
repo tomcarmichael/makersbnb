@@ -170,7 +170,15 @@ describe Application do
     expect(response.body).to include('From: jack@email.com')
     expect(response.body).to include('Date: 2023-04-17') 
     end
+
+    it 'displays a button to deny request' do
+      response = get('/requests/2')
+      expect(response.body).to include('<form method="post" action="/deny_request">') 
+    end
+
   end
+
+  context ""
     # GET /spaces/300
 
     # expect(response.status).to eq 302
