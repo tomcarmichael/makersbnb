@@ -14,9 +14,9 @@
     <% if session[:user]%>
       <li><%= current_page?("spaces") ? 'Spaces' : '<a href="/spaces">Spaces</a>'%></li>
       <li><%= current_page?("requests") ? 'Requests' : '<a href="/requests">Requests</a>'%></li>
-      <li><%= current_page?("logout") ? 'Log out' : '<form method="post" action="/logout">
+      <li><form method="post" action="/logout">
                   <button type="submit" name="logout" class="link-button">Log out</button>
-                </form>'%></li>
+                </form></li>
     <% end %>
 
     <% if !session[:user]%>
