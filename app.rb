@@ -86,6 +86,11 @@ class Application < Sinatra::Base
     erb(:space)
   end
 
+  post '/logout' do 
+    session[:user] = nil
+    return redirect('/spaces')
+  end
+
   post '/spaces/:id' do
     request = Request.new
     repo = RequestRepository.new
@@ -105,7 +110,6 @@ class Application < Sinatra::Base
     @request_data = repo.find_request_info_by_id(params[:id])
     return erb(:single_request)
   end
-
   
   helpers do
     def current_page?(path='')

@@ -10,16 +10,20 @@
 <body>
 
 <nav>
-<% if session[:user]%>
-  <%= current_page?("spaces") ? 'Spaces' : '<a href="/spaces">Spaces</a>'%>
-  <%= current_page?("requests") ? 'Requests' : '<a href="/requests">Requests</a>'%>
-  <%= current_page?("logout") ? 'Log out' : '<a href="/logout">Log out</a>'%>
-<% end %>
+  <ul class="nav_menu_links">
+    <% if session[:user]%>
+      <li><%= current_page?("spaces") ? 'Spaces' : '<a href="/spaces">Spaces</a>'%></li>
+      <li><%= current_page?("requests") ? 'Requests' : '<a href="/requests">Requests</a>'%></li>
+      <li><form method="post" action="/logout">
+                  <button type="submit" name="logout" class="link-button">Log out</button>
+                </form></li>
+    <% end %>
 
-<% if !session[:user]%>
-  <%= current_page?("login") ? 'Log in' : '<a href="/login">Log in</a>'%>
-  <%= current_page?("about") ? 'About' : '<a href="/about">About</a>'%>
-<% end %>
+    <% if !session[:user]%>
+      <li><%= current_page?("login") ? 'Log in' : '<a href="/login">Log in</a>'%></li>
+      <li><%= current_page?("about") ? 'About' : '<a href="/about">About</a>'%></li>
+    <% end %>
+  </ul>
 </nav>
 
   <%= yield %>
