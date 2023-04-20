@@ -1,5 +1,4 @@
 require_relative './request'
-require 'helpers'
 
 class RequestRepository
   def all
@@ -64,6 +63,20 @@ class RequestRepository
     result_set = DatabaseConnection.exec_params(sql, params)
     return result_set.map(&Helper.method(:record_to_request))
   end
-  
-  
+
+  def find_request_info_by_id(request_id)
+    sql = 'SELECT users.email, requests.date, spaces.name, spaces.description FROM requests JOIN spaces ON requests.space_id = spaces.id JOIN users ON requests.requester_id = users.id WHERE requests.id = $1;
+    '
+    params = [request_id]
+
+    result_set = DatabaseConnection.exec_params(sql, params)
+    
+    request_data = Hash.new
+    request_data[:name] = result_set.first['name']
+    request_data[:description] = result_set.first['description']
+    request_data[:email] = result_set.first['email']
+    request_data[:date] = Date.parse(result_set.first['date'])
+
+    return request_data
+  end
 end
