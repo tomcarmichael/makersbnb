@@ -24,6 +24,6 @@ class SpacesRepository
               Helper.convert_date_objects_to_string(space.available_dates)]
 
     DatabaseConnection.exec_params(sql, params)
-    return nil
+    return nil 
   end
 end

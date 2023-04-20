@@ -159,5 +159,22 @@ describe Application do
       expect(last_request.path).to eq('/spaces')
     end
   end
-  
+
+  context 'GET /requests/:id' do
+    it 'returns the correct request page' do
+    response = get('/requests/2')
+
+    expect(response.status).to eq 200
+    expect(response.body).to include("<h1>Request for Happy meadows</h1>") 
+    expect(response.body).to include("A happy place") 
+    expect(response.body).to include('From: jack@email.com')
+    expect(response.body).to include('Date: 2023-04-17') 
+    end
+  end
+    # GET /spaces/300
+
+    # expect(response.status).to eq 302
+    # follow_redirect!
+    # expect(last_request.path).to eq('/spaces')
+
 end
