@@ -1,9 +1,6 @@
 body {
     font-size: 18px;
-}
-
-.current-page {
-    
+    font-family: arial, sans-serif;
 }
 
 /* Style the navigation menu */
@@ -23,7 +20,6 @@ body {
   .nav_menu_links li a {
     text-decoration: none;
     color: #1da1f2;
-    font-weight: bold;
   }
   
   .nav_menu_links li a:hover {
@@ -34,8 +30,8 @@ body {
     background: none;
     border: none;
     color: #1da1f2;
-    font-weight: bold;
     cursor: pointer;
+    font-size: 18px;
   }
   
   .link-button:hover {

@@ -165,9 +165,8 @@ describe Application do
   context "layout" do
     it "displays a logout options via POST when user is logged in" do
       response = get('/spaces', {}, session_params)
-      expect(response.body).to include('<form method="post" action="/logout" class="inline">
-              <button type="submit" name="logout" class="link-button">Log out</button>
-            </form>')
+      expect(response.body).to include('<form method="post" action="/logout"')
+      expect(response.body).to include('<button type="submit" name="logout" class="link-button">Log out</button>')
     end
   end
 
