@@ -12,7 +12,7 @@ INSERT INTO users
 INSERT INTO spaces
 		(name, description, price_per_night, available_dates, owner_id)
 	VALUES
-		('Happy meadows', 'A happy place', 7.99, '{2023-4-17, 2023-4-17}'::date[], 1),
+		('Happy meadows', 'A happy place', 7.99, '{2023-4-17, 2023-4-18}'::date[], 1),
 		('Scary fields', 'A scary field', 11.99, '{2023-3-16, 2023-3-17, 2023-3-18}'::date[], 2),
 		('Melancholy marsh', 'A place to reflect', 10.50, '{2023-4-1, 2023-4-2, 2023-4-7}'::date[], 2),
 		('Airy alpine', 'why not?', 20.00, '{2023-5-17}'::date[], 4),

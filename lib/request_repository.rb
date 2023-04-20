@@ -9,8 +9,8 @@ class RequestRepository
   end
 
   def create(request)
-    sql = 'INSERT INTO requests (space_id, requester_id, date) VALUES ($1, $2, $3)'
-    params = [request.space_id, request.requester_id, request.date]
+    sql = 'INSERT INTO requests (space_id, requester_id, date, status) VALUES ($1, $2, $3, $4)'
+    params = [request.space_id, request.requester_id, request.date, request.status]
 
     DatabaseConnection.exec_params(sql, params)
     return nil
