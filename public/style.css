@@ -2,6 +2,43 @@ body {
     font-size: 18px;
 }
 
-.current-page {
-    
+.center {
+    margin:auto;
+    width: 50%;
 }
+
+
+.flex-container {
+    display: flex;
+    margin: auto;
+    margin-top: 10%;
+    width: 50%;
+    text-align: center;
+}
+
+.flex-child {
+    flex: 1;
+    border: 2px;
+    padding: 10px;
+    position: relative;
+    margin: auto;
+}  
+
+.scroller {
+    border: 2px solid #000000;
+    margin: auto;
+    overflow-x: hidden;
+    overflow-y: visible;
+    height: 320px;
+}
+
+.request {
+    border-radius: 25px;
+    border: 2px solid #000000;
+    padding: 20px;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    width: 70%;
+    height: auto;
+  }
