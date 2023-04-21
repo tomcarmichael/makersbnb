@@ -125,5 +125,9 @@ class Application < Sinatra::Base
       status 401
       return erb(:login_denied)
     end
+
+    def redirect_unless_logged_in
+      return redirect('/') unless session[:user]
+    end
   end
 end

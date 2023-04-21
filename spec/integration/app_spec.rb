@@ -46,6 +46,13 @@ describe Application do
       expect(response.body).to include 'Scary fields'
       expect(response.body).to include 'A scary field'
     end
+
+    it "redirects user to home page if not logged in" do
+      response = get('/spaces')
+      expect(response.status).to eq(302)
+      follow_redirect!
+      expect(last_request.path).to eq('/')
+    end
   end
 
   context 'GET /login' do
