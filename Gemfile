@@ -17,3 +17,5 @@ gem "rainbow", "~> 3.1"
 gem "simplecov", "~> 0.22.0"
 
 gem "simplecov-console", "~> 0.9.1"
+
+gem "rubocop", "~> 1.50"
