@@ -19,12 +19,12 @@ class Application < Sinatra::Base
   end
 
   get '/' do
-    @title = 'MakersBnB'
+    @title = "Home"
     return erb(:index)
   end
 
   get '/login' do
-    @title = 'MakersBnB - Login'
+    @title = "Login"
     return erb(:login)
   end
 
@@ -39,13 +39,14 @@ class Application < Sinatra::Base
   end
 
   get '/spaces' do
-    @title = 'MakersBnB - Spaces'
+    redirect_unless_logged_in
+    @title = "Spaces"
     @spaces = SpacesRepository.new.all
     return erb(:spaces)
   end
 
   get '/spaces/new' do
-    @title = 'MakersBnB - List a space'
+    @title = "List a space"
     return erb(:list_space_new)
   end
 
@@ -68,7 +69,8 @@ class Application < Sinatra::Base
   end
 
   get '/requests' do
-    @title = 'MakersBnB - Requests'
+    redirect_unless_logged_in
+    @title = "Requests"
     repo = RequestRepository.new
     @requests = repo.find_requests_for_user(session[:user].id)
     @requests_by_me = repo.find_by_requester_id(session[:user].id)
@@ -77,6 +79,7 @@ class Application < Sinatra::Base
   end
 
   get '/spaces/:id' do
+    redirect_unless_logged_in
     repo = SpacesRepository.new
     @space = repo.find_by_id(params[:id])
 
@@ -107,13 +110,21 @@ class Application < Sinatra::Base
   get '/requests/:id' do
     repo = RequestRepository.new
     @request_data = repo.find_request_info_by_id(params[:id])
-    return erb(:single_request)
+    if session[:user] && session[:user].id == @request_data[:owner_id]  
+      return erb(:single_request)
+    else
+      return redirect('/')
+    end
   end
 
   post '/deny_request' do
     repo = RequestRepository.new
     repo.reject_request(params[:request_id])
     return redirect('/requests')
+  end  
+  
+  get '/about' do
+    return erb(:about)
   end
 
   post '/accept_request' do
@@ -131,6 +142,10 @@ class Application < Sinatra::Base
     def deny_login
       status 401
       return erb(:login_denied)
+    end
+
+    def redirect_unless_logged_in
+      return redirect('/') unless session[:user]
     end
   end
 end

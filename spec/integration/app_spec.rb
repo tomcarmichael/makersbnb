@@ -20,6 +20,15 @@ describe Application do
   # We need to declare the `app` value by instantiating the Application
   # class so our tests work.
   let(:app) { Application.new }
+  let(:session_params) { { 'rack.session' => { user: double(:user_object) } } }
+  let(:test_redirect_to_homepage) { 
+    follow_redirect!
+    expect(last_request.path).to eq('/')
+  }
+  let(:test_redirect_to_spaces_page) {
+    follow_redirect!
+    expect(last_request.path).to eq('/spaces')
+  }
 
   # Write your integration tests below.
   # If you want to split your integration tests
@@ -37,7 +46,7 @@ describe Application do
 
   context 'GET /spaces' do
     it 'returns a list of spaces' do
-      response = get('/spaces')
+      response = get('/spaces', {}, session_params)
 
       expect(response.status).to eq(200)
       expect(response.body).to include '<h3>Book a Space</h3>'
@@ -45,6 +54,12 @@ describe Application do
       expect(response.body).to include 'A happy place'
       expect(response.body).to include 'Scary fields'
       expect(response.body).to include 'A scary field'
+    end
+
+    it "redirects user to home page if not logged in" do
+      response = get('/spaces')
+      expect(response.status).to eq(302)
+      test_redirect_to_homepage
     end
   end
 
@@ -55,9 +70,9 @@ describe Application do
       expect(response.body).to include('<h1>Login to MakersBnB</h1>')
       expect(response.body).to include('<form method="POST" action="/login_attempt">')
       expect(response.body).to include('<label for="email">Email Address:</label>')
-      expect(response.body).to include('<input type="text" name="email" />')
+      expect(response.body).to include('<input type="text" name="email" id="email"/>')
       expect(response.body).to include('<label for="password">Password:</label>')
-      expect(response.body).to include('<input type="password" name="password" />')
+      expect(response.body).to include('<input type="password" name="password" id="password"/>')
     end
   end
 
@@ -66,8 +81,7 @@ describe Application do
       it 'logs the user in' do
         response = post('/login_attempt', { email: 'sam@email.com', password: 'sampassword' })
         expect(response.status).to eq(302)
-        follow_redirect!
-        expect(last_request.path).to eq('/spaces')
+        test_redirect_to_spaces_page
         expect(last_request.env['rack.session'][:user]).to be_an_instance_of User
         expect(last_request.env['rack.session'][:user].username).to eq 'usersam'
         expect(last_request.env['rack.session'][:user].id).to eq 1
@@ -130,37 +144,50 @@ describe Application do
       expect(response.body).to include 'Space ID: 1'
       expect(response.body).to include 'Space ID: 2'
     end
+
+    it "redirects to the home page unless user is logged in" do
+      response = get('/requests')
+      expect(response.status).to eq(302)
+      test_redirect_to_homepage
+    end
+
   end
 
-  context 'GET /spaces/2' do
+  context 'GET /spaces/:id' do
     it 'Displays a space by ID with name & description' do
-      response = get('/spaces/2')
+      response = get('/spaces/2', {}, session_params)
       expect(response.status).to eq 200
       expect(response.body).to include('<h1>Scary fields</h1>')
       expect(response.body).to include('A scary field')
     end
 
     it 'Displays available dates' do
-      response = get('/spaces/2')
+      response = get('/spaces/2', {}, session_params)
       expect(response.status).to eq 200
       expect(response.body).to include('<label for="date">Select a date:</label>')
-      expect(response.body).to include('<select name="date">')
+      expect(response.body).to include('<select name="date" id="date">')
       expect(response.body).to include('<option value="2023-03-16">2023-03-16</option>')
       expect(response.body).to include('<option value="2023-03-17">2023-03-17</option>')
       expect(response.body).to include('<option value="2023-03-18">2023-03-18</option>')
     end
-  end
 
-  context 'GET /spaces/300 (invalid ID)' do
-    it 'redirects to the spaces page' do
-      response = get('/spaces/300')
-      expect(response.status).to eq 302
-      follow_redirect!
-      expect(last_request.path).to eq('/spaces')
+    it "redirects user to home page if not logged in" do
+      response = get('/spaces/1')
+      expect(response.status).to eq(302)
+      test_redirect_to_homepage
+    end
+
+    context 'given an invalid ID in path' do
+      it 'redirects to the spaces page' do
+        response = get('/spaces/300', {}, session_params)
+        expect(response.status).to eq 302
+        test_redirect_to_spaces_page
+      end
     end
   end
 
-  let(:session_params) { { 'rack.session' => { user: double(:user_object) } } }
+
+
 
   context 'layout' do
     it 'displays a logout options via POST when user is logged in' do
@@ -174,8 +201,7 @@ describe Application do
     it 'redirects to home page' do
       response = post('/logout')
       expect(response.status).to eq(302)
-      follow_redirect!
-      expect(last_request.path).to eq('/spaces')
+      test_redirect_to_spaces_page
     end
 
     it 'logs the user out from session object' do
@@ -188,7 +214,9 @@ describe Application do
 
   context 'GET /requests/:id' do
     it 'returns the correct request page' do
-      response = get('/requests/2')
+      # Request ID 2 is for a space Sam owns
+      sam_user_object = UserRepository.new.find_by_id(1)
+      response = get('/requests/2', {}, { 'rack.session' => { user: sam_user_object } })
 
       expect(response.status).to eq 200
       expect(response.body).to include('<h1>Request for Happy meadows</h1>')
@@ -199,19 +227,22 @@ describe Application do
     end
 
     it 'displays a button to deny request if user is the space owner' do
-      # Create Sam User object for test
-      fake_user = UserRepository.new.find_by_id(1)
-
-      # Request ID 2 is for a space Sam owns
-      response = get('/requests/2', {}, { 'rack.session' => { user: fake_user } })
+      sam_user_object = UserRepository.new.find_by_id(1)
+      response = get('/requests/2', {}, { 'rack.session' => { user: sam_user_object } })
       expect(response.status).to eq(200)
       expect(response.body).to include('<form method="post" action="/deny_request">')
     end
 
-    it 'fails to display button to deny request if user is not the space owner' do
+    it 'redirects to homepage if logged in user is not the space owner for the request' do
+      post('/login', { email: 'gary@email.com', password: 'garypassword' })
       response = get('/requests/2')
-      expect(response.status).to eq(200)
-      expect(response.body).not_to include('<form method="post" action="/deny_request">')
+      expect(response.status).to eq(302)
+    end
+
+    it 'redirects to homepage if user is not logged in' do
+      response = get('/requests/2')
+      expect(response.status).to eq(302)
+      test_redirect_to_homepage
     end
 
     it 'disables the buttons if the request isn\'t \'requested\'' do
@@ -299,6 +330,15 @@ describe Application do
       expect(repo.all.last.requester_id).to eq 2
       expect(repo.all.last.date).to eq Date.parse('2023-4-18')
       expect(repo.all.last.status).to eq 'requested'
+    end
+  end
+
+  context 'GET /about' do
+    it "displays an About page" do
+      response = get('/about')
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<h1>About Us</h1>')
+      expect(response.body).to include('Destablising local housing markets in the most luxurious way possible since 2023')
     end
   end
 end
