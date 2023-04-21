@@ -80,7 +80,6 @@ class Application < Sinatra::Base
   get '/spaces/:id' do
     repo = SpacesRepository.new
     @space = repo.find_by_id(params[:id])
-    @title = "MakersBnB - #{@space.name}"
     
     return redirect('/spaces') unless @space
 
