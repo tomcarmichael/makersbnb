@@ -185,6 +185,7 @@ describe Application do
       expect(last_request.env['rack.session'][:user]).to be_nil
     end
   end
+
   context 'GET /requests/:id' do
     it 'returns the correct request page' do
       response = get('/requests/2')
@@ -194,6 +195,7 @@ describe Application do
       expect(response.body).to include('A happy place')
       expect(response.body).to include('From: jack@email.com')
       expect(response.body).to include('Date: 2023-04-17')
+      expect(response.body).to include('Status: Requested')
     end
 
     it 'displays a button to deny request if user is the space owner' do
@@ -211,6 +213,14 @@ describe Application do
       expect(response.status).to eq(200)
       expect(response.body).not_to include('<form method="post" action="/deny_request">')
     end
+
+    it 'disables the buttons if the request isn\'t \'requested\'' do
+      post('/login_attempt', { email: 'sam@email.com', password: 'sampassword' })
+      response = get('/requests/6')
+      expect(response.status).to eq(200)
+      expect(response.body).to include('disabled>Deny Request</button')
+      expect(response.body).to include('disabled>Accept Request</button')
+    end
   end
 
   context 'POST /deny_request' do
@@ -226,6 +236,52 @@ describe Application do
       expect(response.status).to eq(302)
       follow_redirect!
       expect(last_request.path).to eq('/requests')
+    end
+  end
+
+  context 'POST /accept_request' do
+    it "updates the request to 'confirmed' in the DB" do
+      request = RequestRepository.new.find_by_id(4)
+      expect(request.status).to eq 'requested'
+      response = post('/accept_request', { request_id: 4 })
+      request = RequestRepository.new.find_by_id(4)
+      expect(request.status).to eq 'confirmed'
+    end
+
+    it 'redirects to /requests' do
+      response = post('/accept_request', { request_id: 4 })
+      expect(response.status).to eq(302)
+      follow_redirect!
+      expect(last_request.path).to eq('/requests')
+    end
+
+    it 'rejects all other requests for this space and date' do
+      # Create Sam User object for test
+      fake_user = UserRepository.new.find_by_id(1)
+      # Make a new request for space 2 by user 'Sam'
+      post('/spaces/2', {date: '2023-3-18'}, { 'rack.session' => { user: fake_user } })
+
+      # Assert a new request has been made
+      requests_for_space_2 = RequestRepository.new.find_by_space_id(2)
+      expect(requests_for_space_2.length).to eq 2
+
+      # Accept request 3
+      post('/accept_request', { request_id: 3 })
+
+      # Assert the request has been accepted
+      accepted_request = RequestRepository.new.find_by_id(3)
+      expect(accepted_request.status).to eq 'confirmed'
+
+      # Assert the other request has been rejected
+      rejected_request = RequestRepository.new.find_by_id(8)
+      expect(rejected_request.status).to eq 'rejected'
+    end
+
+    it 'removes the date as an available date from the space' do
+      post('/accept_request', { request_id: 3 })
+      space = SpacesRepository.new.find_by_id(2)
+
+      expect(space.available_dates).to eq [Date.parse('2023-3-16'), Date.parse('2023-3-17')]
     end
   end
 

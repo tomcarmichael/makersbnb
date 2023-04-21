@@ -26,4 +26,13 @@ class SpacesRepository
     DatabaseConnection.exec_params(sql, params)
     return nil
   end
+
+  def update(space)
+    sql = 'UPDATE spaces SET name = $1, description = $2, price_per_night = $3, owner_id = $4, available_dates = $5 WHERE id = $6'
+    params = [space.name, space.description, space.price_per_night, space.owner_id,
+      Helper.convert_date_objects_to_string(space.available_dates), space.id]
+
+    DatabaseConnection.exec_params(sql, params)
+    return nil
+  end
 end

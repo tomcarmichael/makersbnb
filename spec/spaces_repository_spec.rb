@@ -59,4 +59,23 @@ describe SpacesRepository do
     expected_dates = ['2023-5-4', '1994-7-9']
     expect(all_spaces.last.available_dates).to eq(expected_dates.map { |date| Date.parse(date) })
   end
+
+  it 'updates a space' do
+    space = Space.new
+    space.id = 1
+    space.name = "Bowser's Palace"
+    space.description = 'Boss level'
+    space.owner_id = 4
+    space.price_per_night = 49.99
+    space.available_dates = ['2023-5-4', '1994-7-9'].map { |date| Date.parse(date) }
+
+    repo.update(space)
+    updated_space = repo.find_by_id(1)
+
+    expect(updated_space.id).to eq 1
+    expect(updated_space.name).to eq "Bowser's Palace"
+    expect(updated_space.owner_id).to eq 4
+    expected_dates = ['2023-5-4', '1994-7-9']
+    expect(updated_space.available_dates).to eq(expected_dates.map { |date| Date.parse(date) })
+  end
 end
