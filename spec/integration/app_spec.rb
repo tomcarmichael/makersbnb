@@ -70,9 +70,9 @@ describe Application do
       expect(response.body).to include('<h1>Login to MakersBnB</h1>')
       expect(response.body).to include('<form method="POST" action="/login_attempt">')
       expect(response.body).to include('<label for="email">Email Address:</label>')
-      expect(response.body).to include('<input type="text" name="email" />')
+      expect(response.body).to include('<input type="text" name="email" id="email"/>')
       expect(response.body).to include('<label for="password">Password:</label>')
-      expect(response.body).to include('<input type="password" name="password" />')
+      expect(response.body).to include('<input type="password" name="password" id="password"/>')
     end
   end
 
@@ -165,7 +165,7 @@ describe Application do
       response = get('/spaces/2', {}, session_params)
       expect(response.status).to eq 200
       expect(response.body).to include('<label for="date">Select a date:</label>')
-      expect(response.body).to include('<select name="date">')
+      expect(response.body).to include('<select name="date" id="date">')
       expect(response.body).to include('<option value="2023-03-16">2023-03-16</option>')
       expect(response.body).to include('<option value="2023-03-17">2023-03-17</option>')
       expect(response.body).to include('<option value="2023-03-18">2023-03-18</option>')
@@ -274,6 +274,15 @@ describe Application do
       expect(repo.all.last.requester_id).to eq 2
       expect(repo.all.last.date).to eq Date.parse('2023-4-18')
       expect(repo.all.last.status).to eq 'requested'
+    end
+  end
+
+  context 'GET /about' do
+    it "displays an About page" do
+      response = get('/about')
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<h1>About Us</h1>')
+      expect(response.body).to include('Destablising local housing markets in the most luxurious way possible since 2023')
     end
   end
 end

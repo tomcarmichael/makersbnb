@@ -19,12 +19,12 @@ class Application < Sinatra::Base
   end
 
   get '/' do
-    @title = 'MakersBnB'
+    @title = "Home"
     return erb(:index)
   end
 
   get '/login' do
-    @title = 'MakersBnB - Login'
+    @title = "Login"
     return erb(:login)
   end
 
@@ -40,13 +40,13 @@ class Application < Sinatra::Base
 
   get '/spaces' do
     redirect_unless_logged_in
-    @title = 'MakersBnB - Spaces'
+    @title = "Spaces"
     @spaces = SpacesRepository.new.all
     return erb(:spaces)
   end
 
   get '/spaces/new' do
-    @title = 'MakersBnB - List a space'
+    @title = "List a space"
     return erb(:list_space_new)
   end
 
@@ -70,7 +70,7 @@ class Application < Sinatra::Base
 
   get '/requests' do
     redirect_unless_logged_in
-    @title = 'MakersBnB - Requests'
+    @title = "Requests"
     repo = RequestRepository.new
     @requests = repo.find_requests_for_user(session[:user].id)
     @requests_by_me = repo.find_by_requester_id(session[:user].id)
@@ -121,6 +121,10 @@ class Application < Sinatra::Base
     repo = RequestRepository.new
     repo.reject_request(params[:request_id])
     return redirect('/requests')
+  end  
+  
+  get '/about' do
+    return erb(:about)
   end
 
   helpers do
