@@ -245,4 +245,13 @@ describe Application do
       expect(repo.all.last.status).to eq 'requested'
     end
   end
+
+  context 'GET /about' do
+    it "displays an About page" do
+      response = get('/about')
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<h1>About Us</h1>')
+      expect(response.body).to include('Destablising local housing markets in the most luxurious way possible since 2023')
+    end
+  end
 end
