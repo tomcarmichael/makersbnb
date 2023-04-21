@@ -39,6 +39,7 @@ class Application < Sinatra::Base
   end
 
   get '/spaces' do
+    redirect_unless_logged_in
     @title = "Spaces"
     @spaces = SpacesRepository.new.all
     return erb(:spaces)
@@ -68,6 +69,7 @@ class Application < Sinatra::Base
   end
 
   get '/requests' do
+    redirect_unless_logged_in
     @title = "Requests"
     repo = RequestRepository.new
     @requests = repo.find_requests_for_user(session[:user].id)
@@ -77,6 +79,7 @@ class Application < Sinatra::Base
   end
 
   get '/spaces/:id' do
+    redirect_unless_logged_in
     repo = SpacesRepository.new
     @space = repo.find_by_id(params[:id])
 
@@ -107,7 +110,11 @@ class Application < Sinatra::Base
   get '/requests/:id' do
     repo = RequestRepository.new
     @request_data = repo.find_request_info_by_id(params[:id])
-    return erb(:single_request)
+    if session[:user] && session[:user].id == @request_data[:owner_id]  
+      return erb(:single_request)
+    else
+      return redirect('/')
+    end
   end
 
   post '/deny_request' do
@@ -128,6 +135,10 @@ class Application < Sinatra::Base
     def deny_login
       status 401
       return erb(:login_denied)
+    end
+
+    def redirect_unless_logged_in
+      return redirect('/') unless session[:user]
     end
   end
 end
