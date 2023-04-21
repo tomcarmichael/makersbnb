@@ -1,3 +1,12 @@
+require 'simplecov'
+require 'simplecov-console'
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+  SimpleCov::Formatter::Console,
+])
+SimpleCov.start do
+  add_filter 'database_connection.rb'
+end
+
 ENV['ENV'] = 'test'
 
 require 'database_connection'
