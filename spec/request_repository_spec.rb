@@ -142,6 +142,17 @@ RSpec.describe RequestRepository do
       request = repo.find_request_info_by_id(4)
       expect(request[:request_id]).to eq 4
     end
+
+    it 'return the status of the request id' do
+      request = repo.find_request_info_by_id(2)
+      expect(request[:status]).to eq('requested')
+
+      request = repo.find_request_info_by_id(6)
+      expect(request[:status]).to eq('confirmed')
+
+      request = repo.find_request_info_by_id(7)
+      expect(request[:status]).to eq('rejected')
+    end
   end
 
   context '#reject_request' do
@@ -158,6 +169,68 @@ RSpec.describe RequestRepository do
 
     it 'returns nil' do
       expect(repo.reject_request(4)).to eq nil
+    end
+  end
+
+  context '#accept_request' do
+    it "Updates request status to 'accepted' by ID & returns nil" do
+      request_id = 4
+      request_before_accepted = repo.find_by_id(request_id)
+      expect(request_before_accepted.status).to eq 'requested'
+
+      repo.accept_request(request_id)
+
+      updated_request = repo.find_by_id(request_id)
+      expect(updated_request.status).to eq 'confirmed'
+    end
+
+    it 'returns nil' do
+      expect(repo.accept_request(4)).to eq nil
+    end
+
+    it "rejects other requests for this date and space" do
+      conflicting_request_1 = Request.new
+      conflicting_request_1.space_id = 2
+      conflicting_request_1.requester_id = 1
+      conflicting_request_1.date = Date.parse('2023-3-18')
+      conflicting_request_1.status = 'requested'
+      
+      conflicting_request_2 = Request.new
+      conflicting_request_2.space_id = 2
+      conflicting_request_2.requester_id = 4
+      conflicting_request_2.date = Date.parse('2023-3-18')
+      conflicting_request_2.status = 'requested'
+
+      repo.create(conflicting_request_1)
+      repo.create(conflicting_request_2)
+
+      repo.accept_request(3)
+
+      expect(repo.find_by_id(8).status).to eq 'rejected'
+      expect(repo.find_by_id(9).status).to eq 'rejected'
+    end
+  end
+
+  context '#find_conflicting_requests' do
+    it 'returns a list of other request_ids that point towards the same space and date' do
+      conflicting_request_1 = Request.new
+      conflicting_request_1.space_id = 2
+      conflicting_request_1.requester_id = 1
+      conflicting_request_1.date = Date.parse('2023-3-18')
+      conflicting_request_1.status = 'requested'
+      
+      conflicting_request_2 = Request.new
+      conflicting_request_2.space_id = 2
+      conflicting_request_2.requester_id = 4
+      conflicting_request_2.date = Date.parse('2023-3-18')
+      conflicting_request_2.status = 'requested'
+
+      repo.create(conflicting_request_1)
+      repo.create(conflicting_request_2)
+
+      expect(repo.find_conflicting_requests(3)).to eq [8,9]
+      expect(repo.find_conflicting_requests(8)).to eq [3,9]
+      expect(repo.find_conflicting_requests(9)).to eq [3,8]
     end
   end
 end

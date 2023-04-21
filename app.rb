@@ -127,6 +127,13 @@ class Application < Sinatra::Base
     return erb(:about)
   end
 
+  post '/accept_request' do
+    repo = RequestRepository.new
+    repo.accept_request(params[:request_id])
+    
+    return redirect('/requests')
+  end
+
   helpers do
     def current_page?(path = '')
       request.path_info == '/' + path

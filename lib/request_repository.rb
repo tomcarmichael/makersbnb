@@ -40,9 +40,9 @@ class RequestRepository
     return result_set.map(&Helper.method(:record_to_request))
   end
 
-  def find_by_id(space_id)
+  def find_by_id(id)
     sql = 'SELECT * FROM requests WHERE id=$1'
-    params = [space_id]
+    params = [id]
 
     result_set = DatabaseConnection.exec_params(sql, params)
     return Helper.record_to_request(result_set.first)
@@ -67,7 +67,7 @@ class RequestRepository
   def find_request_info_by_id(request_id)
     # sql = 'SELECT users.email, requests.date, spaces.name, spaces.description FROM requests JOIN spaces ON requests.space_id = spaces.id JOIN users ON requests.requester_id = users.id WHERE requests.id = $1;
     # '
-    sql = 'SELECT users.email, requests.id AS "request_id", requests.date, spaces.name, spaces.description, spaces.owner_id
+    sql = 'SELECT users.email, requests.id AS "request_id", requests.date, spaces.name, spaces.description, spaces.owner_id, requests.status
             FROM requests JOIN spaces ON requests.space_id = spaces.id
               JOIN users ON requests.requester_id = users.id
                 WHERE requests.id = $1;'
@@ -82,6 +82,7 @@ class RequestRepository
     request_data[:date] = Date.parse(result_set['date'])
     request_data[:owner_id] = result_set['owner_id'].to_i
     request_data[:request_id] = result_set['request_id'].to_i
+    request_data[:status] = result_set['status']
 
     return request_data
   end
@@ -91,5 +92,39 @@ class RequestRepository
     DatabaseConnection.exec_params(sql, [request_id])
 
     return nil
+  end
+
+  def accept_request(request_id)
+    sql = "UPDATE requests SET status = 'confirmed' WHERE id = $1;"
+    DatabaseConnection.exec_params(sql, [request_id])
+    conflicting_requests = find_conflicting_requests(request_id)
+    unless conflicting_requests.empty?
+      # sql = "UPDATE requests SET status = 'rejected' WHERE id IN ($1)"
+      # DatabaseConnection.exec_params(sql, [conflicting_requests])
+      conflicting_requests.each do |id|
+        reject_request(id)
+      end
+    end
+
+    # Update the available dates
+    request = find_by_id(request_id)
+    space = SpacesRepository.new.find_by_id(request.space_id)
+    space.available_dates.delete(request.date)
+
+    SpacesRepository.new.update(space)
+
+    return nil
+  end
+
+  def find_conflicting_requests(request_id)
+    request = find_by_id(request_id)
+    sql = 'SELECT id FROM requests WHERE space_id = $1 AND date = $2 AND id != $3'
+    params = [request.space_id, request.date, request.id]
+
+    result_set = DatabaseConnection.exec_params(sql, params)
+
+    return result_set.map do |record|
+      record['id'].to_i
+    end
   end
 end

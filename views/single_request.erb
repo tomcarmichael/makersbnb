@@ -4,10 +4,16 @@
   <p><%= @request_data[:description] %></p>
   <p>From: <%= @request_data[:email] %></p>
   <p>Date: <%= @request_data[:date].to_s %></p>
+  <p>Status: <%= @request_data[:status].capitalize %></p>
 </div>
 
-<div>
-  <form method="post" action="/deny_request">
-    <button type="submit" name="request_id" value="<%= @request_data[:request_id] %>" class="link-button">Deny Request from <%= @request_data[:email] %></button>
-  </form>
-</div>
+<% if session[:user] && @request_data[:owner_id] == session[:user].id %>
+  <div>
+    <form method="post" action="/deny_request">
+      <button type="submit" name="request_id" value="<%= @request_data[:request_id] %>" <%= 'disabled' unless @request_data[:status] == 'requested'%>>Deny Request</button>
+    </form>
+    <form method="post" action="/accept_request">
+      <button type="submit" name="request_id" value="<%= @request_data[:request_id] %>" <%= 'disabled' unless @request_data[:status] == 'requested'%>>Accept Request</button>
+    </form>
+  </div>
+<% end %>
