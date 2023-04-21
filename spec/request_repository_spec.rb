@@ -3,20 +3,19 @@ require_relative '../lib/request_repository'
 
 def reset_tables
   sql = File.read('spec/seeds/seeds.sql')
-  connection = PG.connect({host: '127.0.0.1', dbname: 'makersbnb_test'})
+  connection = PG.connect({ host: '127.0.0.1', dbname: 'makersbnb_test' })
   connection.exec(sql)
 end
-
 
 RSpec.describe RequestRepository do
   before(:each) do
     reset_tables
   end
 
-  let(:repo) {RequestRepository.new}
+  let(:repo) { RequestRepository.new }
 
   context '#all' do
-    it "returns a list of all requests" do
+    it 'returns a list of all requests' do
       requests = repo.all
 
       expect(requests.first.id).to eq 1
@@ -24,7 +23,7 @@ RSpec.describe RequestRepository do
       expect(requests.first.requester_id).to eq 2
       expect(requests.first.date).to eq Date.parse('2023-4-17')
       expect(requests.first.status).to eq 'requested'
-      
+
       expect(requests.last.id).to eq 7
       expect(requests.last.space_id).to eq 1
       expect(requests.last.requester_id).to eq 3
@@ -34,13 +33,13 @@ RSpec.describe RequestRepository do
   end
 
   context '#create' do
-    it "creates a request" do
+    it 'creates a request' do
       request = Request.new
-      request.space_id = 2   
-      request.requester_id = 2   
+      request.space_id = 2
+      request.requester_id = 2
       request.date = Date.parse('2023-10-17')
       request.status = 'requested'
-      
+
       repo.create(request)
 
       expect(repo.all.last.id).to eq 8
@@ -52,11 +51,11 @@ RSpec.describe RequestRepository do
   end
 
   context '#delete' do
-    it "deletes a request" do
+    it 'deletes a request' do
       repo.delete(1)
 
       requests = repo.all
-      
+
       expect(requests.first.id).to eq 2
       expect(requests.first.space_id).to eq 1
       expect(requests.first.requester_id).to eq 3
@@ -65,7 +64,7 @@ RSpec.describe RequestRepository do
   end
 
   context '#find_by_requester_id' do
-    it "finds all requests with associated requester id" do
+    it 'finds all requests with associated requester id' do
       requests = repo.find_by_requester_id(3)
 
       expect(requests.length).to eq 3
@@ -77,7 +76,7 @@ RSpec.describe RequestRepository do
   end
 
   context '#find_by_space_id' do
-    it "finds all requests with associated space id" do
+    it 'finds all requests with associated space id' do
       requests = repo.find_by_space_id(1)
 
       expect(requests.length).to eq 4
@@ -89,7 +88,7 @@ RSpec.describe RequestRepository do
   end
 
   context '#find_by_id' do
-    it "finds a request by id" do
+    it 'finds a request by id' do
       request = repo.find_by_id(1)
 
       expect(request.id).to eq 1
@@ -100,7 +99,7 @@ RSpec.describe RequestRepository do
   end
 
   context '#find_by_place_id_and_date' do
-    it "finds a request by place id and date" do
+    it 'finds a request by place id and date' do
       requests = repo.find_by_place_id_and_date(1, '2023-4-17')
 
       expect(requests.first.id).to eq 1
@@ -111,7 +110,7 @@ RSpec.describe RequestRepository do
   end
 
   context '#find_requests_for_user' do
-    it "finds all requests that pertain to a user id" do
+    it 'finds all requests that pertain to a user id' do
       requests = repo.find_requests_for_user(2)
 
       expect(requests.first.space_id).to eq 2
@@ -124,10 +123,10 @@ RSpec.describe RequestRepository do
   context '#find_request_info_by_id' do
     it 'finds correct data pertaining to a request id' do
       request = repo.find_request_info_by_id(2)
-      expect(request[:name]).to eq("Happy meadows") 
-      expect(request[:description]).to eq("A happy place") 
+      expect(request[:name]).to eq('Happy meadows')
+      expect(request[:description]).to eq('A happy place')
       expect(request[:email]).to eq('jack@email.com')
-      expect(request[:date]).to eq(Date.parse('2023-4-17')) 
+      expect(request[:date]).to eq(Date.parse('2023-4-17'))
     end
 
     it 'returns the owner_id of the space that was requested' do
@@ -152,12 +151,12 @@ RSpec.describe RequestRepository do
       expect(request_before_reject.status).to eq 'requested'
 
       repo.reject_request(request_id)
-      
+
       updated_request = repo.find_by_id(request_id)
       expect(updated_request.status).to eq 'rejected'
     end
 
-    it "returns nil" do
+    it 'returns nil' do
       expect(repo.reject_request(4)).to eq nil
     end
   end
