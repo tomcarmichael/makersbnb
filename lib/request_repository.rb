@@ -4,7 +4,7 @@ class RequestRepository
   def all
     sql = 'SELECT * FROM requests'
     result_set = DatabaseConnection.exec_params(sql, [])
-    
+
     return result_set.map(&Helper.method(:record_to_request))
   end
 
@@ -56,7 +56,7 @@ class RequestRepository
     return result_set.map(&Helper.method(:record_to_request))
   end
 
-  def find_requests_for_user(user_id) 
+  def find_requests_for_user(user_id)
     sql = 'SELECT requests.id, requests.space_id, requests.requester_id, requests.date, requests.status, spaces.owner_id FROM requests JOIN spaces ON requests.space_id = spaces.id WHERE spaces.owner_id = $1'
     params = [user_id]
 
@@ -69,13 +69,13 @@ class RequestRepository
     # '
     sql = 'SELECT users.email, requests.id AS "request_id", requests.date, spaces.name, spaces.description, spaces.owner_id
             FROM requests JOIN spaces ON requests.space_id = spaces.id
-              JOIN users ON requests.requester_id = users.id 
+              JOIN users ON requests.requester_id = users.id
                 WHERE requests.id = $1;'
     params = [request_id]
 
     result_set = DatabaseConnection.exec_params(sql, params).first
-    
-    request_data = Hash.new
+
+    request_data = {}
     request_data[:name] = result_set['name']
     request_data[:description] = result_set['description']
     request_data[:email] = result_set['email']

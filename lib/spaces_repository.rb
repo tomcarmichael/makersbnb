@@ -1,5 +1,5 @@
-require_relative "./database_connection"
-require_relative "./space"
+require_relative './database_connection'
+require_relative './space'
 
 class SpacesRepository
   def all
@@ -20,10 +20,10 @@ class SpacesRepository
     sql = 'INSERT INTO spaces (name, description, price_per_night, owner_id, available_dates)
           VALUES ($1, $2, $3, $4, $5);'
 
-    params = [space.name, space.description, space.price_per_night, space.owner_id, 
+    params = [space.name, space.description, space.price_per_night, space.owner_id,
               Helper.convert_date_objects_to_string(space.available_dates)]
 
     DatabaseConnection.exec_params(sql, params)
-    return nil 
+    return nil
   end
 end

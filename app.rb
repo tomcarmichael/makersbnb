@@ -19,12 +19,12 @@ class Application < Sinatra::Base
   end
 
   get '/' do
-    @title = "MakersBnB"
+    @title = 'MakersBnB'
     return erb(:index)
   end
 
   get '/login' do
-    @title = "MakersBnB - Login"
+    @title = 'MakersBnB - Login'
     return erb(:login)
   end
 
@@ -39,14 +39,13 @@ class Application < Sinatra::Base
   end
 
   get '/spaces' do
-    @title = "MakersBnB - Spaces"
+    @title = 'MakersBnB - Spaces'
     @spaces = SpacesRepository.new.all
     return erb(:spaces)
   end
 
-
   get '/spaces/new' do
-    @title = "MakersBnB - List a space"
+    @title = 'MakersBnB - List a space'
     return erb(:list_space_new)
   end
 
@@ -54,9 +53,9 @@ class Application < Sinatra::Base
     repo = SpacesRepository.new
     space = Space.new
 
-    space.name=params['name']
-    space.description=params['description']
-    space.price_per_night=params['price']
+    space.name = params['name']
+    space.description = params['description']
+    space.price_per_night = params['price']
     start_date = Date.parse(params['start_date'])
     end_date = Date.parse(params['end_date'])
     space.available_dates = (start_date..end_date).to_a
@@ -64,12 +63,12 @@ class Application < Sinatra::Base
     space.owner_id = 2
 
     repo.create(space)
-    
+
     return redirect '/'
   end
 
   get '/requests' do
-    @title = "MakersBnB - Requests"
+    @title = 'MakersBnB - Requests'
     repo = RequestRepository.new
     @requests = repo.find_requests_for_user(session[:user].id)
     @requests_by_me = repo.find_by_requester_id(session[:user].id)
@@ -80,13 +79,13 @@ class Application < Sinatra::Base
   get '/spaces/:id' do
     repo = SpacesRepository.new
     @space = repo.find_by_id(params[:id])
-    
+
     return redirect('/spaces') unless @space
 
     erb(:space)
   end
 
-  post '/logout' do 
+  post '/logout' do
     session[:user] = nil
     return redirect('/spaces')
   end
@@ -115,14 +114,13 @@ class Application < Sinatra::Base
     repo = RequestRepository.new
     repo.reject_request(params[:request_id])
     return redirect('/requests')
-  end    
+  end
 
-  
   helpers do
-    def current_page?(path='')
+    def current_page?(path = '')
       request.path_info == '/' + path
     end
-    
+
     def deny_login
       status 401
       return erb(:login_denied)
