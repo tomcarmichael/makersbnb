@@ -39,6 +39,7 @@ RSpec.describe RequestRepository do
       request.space_id = 2   
       request.requester_id = 2   
       request.date = Date.parse('2023-10-17')
+      request.status = 'requested'
       
       repo.create(request)
 
@@ -46,6 +47,7 @@ RSpec.describe RequestRepository do
       expect(repo.all.last.space_id).to eq 2
       expect(repo.all.last.requester_id).to eq 2
       expect(repo.all.last.date).to eq Date.parse('2023-10-17')
+      expect(repo.all.last.status).to eq 'requested'
     end
   end
 

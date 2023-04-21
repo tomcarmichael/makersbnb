@@ -1,22 +1,32 @@
-<h3>Requests for me</h3>
-<% @requests.each do |request| %>
-  <div onclick="location.href='/requests/<%= request.id %>'" style="cursor:pointer">
-      Space ID: <%= request.space_id %><br>
-      Requester ID: <%= request.requester_id %><br>
-      date: <%= request.date %><br>
-      Status: <%= request.status %><br>
+
+<div class="flex-container center"> 
+  <div class="flex-child">
+    <h3>Requests for me</h3>
+    <div class='scroller'>
+      <% @requests.each do |request| %>
+        <div class='request' onclick="location.href='/requests/<%= request.id %>'" style="cursor:pointer">
+            Space ID: <%= request.space_id %><br>
+            Requester ID: <%= request.requester_id %><br>
+            date: <%= request.date %><br>
+            Status: <%= request.status %><br>
+        </div>
+      <% end %>
+    </div>
   </div>
-  -------------------------
-  <br>
-<% end %>
-<h3>Requests by me</h3>
-<% @requests_by_me.each do |request| %>
-  <div onclick="location.href='/spaces/<%= request.space_id %>'" style="cursor:pointer">
-      Space ID: <%= request.space_id %><br>
-      Requester ID: <%= request.requester_id %><br>
-      date: <%= request.date %><br>
-      Status: <%= request.status %><br>
+
+  <div class="flex-child">
+    <h3>Requests by me</h3>
+    <div class='scroller'>
+      <% @requests_by_me.each do |request| %>
+        <div class='request' onclick="location.href='/spaces/<%= request.space_id %>'" style="cursor:pointer">
+            Space ID: <%= request.space_id %><br>
+            Requester ID: <%= request.requester_id %><br>
+            date: <%= request.date %><br>
+            Status: <%= request.status %><br>
+        </div>
+      <% end %>
+    </div>
   </div>
-  -------------------------
-  <br>
-<% end %>
+</div>
+
+
