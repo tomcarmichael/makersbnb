@@ -44,7 +44,6 @@ class Application < Sinatra::Base
     return erb(:spaces)
   end
 
-
   get '/spaces/new' do
     @title = "List a space"
     return erb(:list_space_new)
@@ -54,9 +53,9 @@ class Application < Sinatra::Base
     repo = SpacesRepository.new
     space = Space.new
 
-    space.name=params['name']
-    space.description=params['description']
-    space.price_per_night=params['price']
+    space.name = params['name']
+    space.description = params['description']
+    space.price_per_night = params['price']
     start_date = Date.parse(params['start_date'])
     end_date = Date.parse(params['end_date'])
     space.available_dates = (start_date..end_date).to_a
@@ -64,7 +63,7 @@ class Application < Sinatra::Base
     space.owner_id = 2
 
     repo.create(space)
-    
+
     return redirect '/'
   end
 
@@ -80,13 +79,13 @@ class Application < Sinatra::Base
   get '/spaces/:id' do
     repo = SpacesRepository.new
     @space = repo.find_by_id(params[:id])
-    
+
     return redirect('/spaces') unless @space
 
     erb(:space)
   end
 
-  post '/logout' do 
+  post '/logout' do
     session[:user] = nil
     return redirect('/spaces')
   end
@@ -115,14 +114,17 @@ class Application < Sinatra::Base
     repo = RequestRepository.new
     repo.reject_request(params[:request_id])
     return redirect('/requests')
-  end    
-
+  end  
   
+  get '/about' do
+    return erb(:about)
+  end
+
   helpers do
-    def current_page?(path='')
+    def current_page?(path = '')
       request.path_info == '/' + path
     end
-    
+
     def deny_login
       status 401
       return erb(:login_denied)
