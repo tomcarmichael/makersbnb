@@ -3,7 +3,7 @@
 <div>
   <form method='POST' action='/spaces/<%= @space.id%>'> 
     <label for="date">Select a date:</label>
-    <select name="date">
+    <select name="date" id="date">
     <% @space.available_dates.each do |date|%>
       <option value="<%= date %>"><%= date %></option>
     <% end %>
