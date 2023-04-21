@@ -1,21 +1,20 @@
 class Helper
   def self.record_to_request(record)
     return nil unless record
-
     request = Request.new
     request.id = record['id'].to_i
     request.space_id = record['space_id'].to_i
     request.requester_id = record['requester_id'].to_i
     request.date = Date.parse(record['date'])
     request.status = record['status']
-    request
+    return request
   end
 
   def self.convert_to_date_objects(dates_string)
     # SQL query of the "available_dates" col returns a single string formatted as: "{YYYY-MM-DD,YYY-MM-DD}"
     date_array = dates_string[1..-2].split(',')
 
-    date_array.map { |date| Date.parse(date) }
+    return date_array.map { |date| Date.parse(date) }
   end
 
   def self.convert_date_objects_to_string(dates_array)
@@ -25,7 +24,6 @@ class Helper
 
   def self.convert_to_space(record)
     return nil unless record
-
     space = Space.new
     space.id = record['id'].to_i
     space.name = record['name']
@@ -34,7 +32,7 @@ class Helper
     space.owner_id = record['owner_id'].to_i
     space.available_dates = Helper.convert_to_date_objects(record['available_dates'])
 
-    space
+    return space
   end
 
   def self.convert_to_user(record)
@@ -47,10 +45,11 @@ class Helper
     user.email = record['email']
     user.password = record['password']
 
-    user
+    return user
   end
 
-  def self.current_page?(path = '')
+  def self.current_page?(path='')
     request.path_info == '/' + path
   end
 end
+
