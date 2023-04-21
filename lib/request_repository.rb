@@ -65,18 +65,31 @@ class RequestRepository
   end
 
   def find_request_info_by_id(request_id)
-    sql = 'SELECT users.email, requests.date, spaces.name, spaces.description FROM requests JOIN spaces ON requests.space_id = spaces.id JOIN users ON requests.requester_id = users.id WHERE requests.id = $1;
-    '
+    # sql = 'SELECT users.email, requests.date, spaces.name, spaces.description FROM requests JOIN spaces ON requests.space_id = spaces.id JOIN users ON requests.requester_id = users.id WHERE requests.id = $1;
+    # '
+    sql = 'SELECT users.email, requests.id AS "request_id", requests.date, spaces.name, spaces.description, spaces.owner_id
+            FROM requests JOIN spaces ON requests.space_id = spaces.id
+              JOIN users ON requests.requester_id = users.id 
+                WHERE requests.id = $1;'
     params = [request_id]
 
-    result_set = DatabaseConnection.exec_params(sql, params)
+    result_set = DatabaseConnection.exec_params(sql, params).first
     
     request_data = Hash.new
-    request_data[:name] = result_set.first['name']
-    request_data[:description] = result_set.first['description']
-    request_data[:email] = result_set.first['email']
-    request_data[:date] = Date.parse(result_set.first['date'])
+    request_data[:name] = result_set['name']
+    request_data[:description] = result_set['description']
+    request_data[:email] = result_set['email']
+    request_data[:date] = Date.parse(result_set['date'])
+    request_data[:owner_id] = result_set['owner_id'].to_i
+    request_data[:request_id] = result_set['request_id'].to_i
 
     return request_data
+  end
+
+  def reject_request(request_id)
+    sql = "UPDATE requests SET status = 'rejected' WHERE id = $1;"
+    DatabaseConnection.exec_params(sql, [request_id])
+
+    return nil
   end
 end

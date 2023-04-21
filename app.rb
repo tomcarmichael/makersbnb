@@ -110,6 +110,13 @@ class Application < Sinatra::Base
     @request_data = repo.find_request_info_by_id(params[:id])
     return erb(:single_request)
   end
+
+  post '/deny_request' do
+    repo = RequestRepository.new
+    repo.reject_request(params[:request_id])
+    return redirect('/requests')
+  end    
+
   
   helpers do
     def current_page?(path='')

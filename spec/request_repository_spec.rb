@@ -123,12 +123,42 @@ RSpec.describe RequestRepository do
 
   context '#find_request_info_by_id' do
     it 'finds correct data pertaining to a request id' do
+      request = repo.find_request_info_by_id(2)
+      expect(request[:name]).to eq("Happy meadows") 
+      expect(request[:description]).to eq("A happy place") 
+      expect(request[:email]).to eq('jack@email.com')
+      expect(request[:date]).to eq(Date.parse('2023-4-17')) 
+    end
 
-    request = repo.find_request_info_by_id(2)
-    expect(request[:name]).to eq("Happy meadows") 
-    expect(request[:description]).to eq("A happy place") 
-    expect(request[:email]).to eq('jack@email.com')
-    expect(request[:date]).to eq(Date.parse('2023-4-17')) 
+    it 'returns the owner_id of the space that was requested' do
+      request = repo.find_request_info_by_id(2)
+      expect(request[:owner_id]).to eq 1
+      request = repo.find_request_info_by_id(4)
+      expect(request[:owner_id]).to eq 2
+    end
+
+    it 'returns the request_id of the space that was requested' do
+      request = repo.find_request_info_by_id(2)
+      expect(request[:request_id]).to eq 2
+      request = repo.find_request_info_by_id(4)
+      expect(request[:request_id]).to eq 4
+    end
+  end
+
+  context '#reject_request' do
+    it "Updates request status to 'rejected' by ID & returns nil" do
+      request_id = 4
+      request_before_reject = repo.find_by_id(request_id)
+      expect(request_before_reject.status).to eq 'requested'
+
+      repo.reject_request(request_id)
+      
+      updated_request = repo.find_by_id(request_id)
+      expect(updated_request.status).to eq 'rejected'
+    end
+
+    it "returns nil" do
+      expect(repo.reject_request(4)).to eq nil
     end
   end
 end

@@ -195,6 +195,38 @@ describe Application do
     expect(response.body).to include('From: jack@email.com')
     expect(response.body).to include('Date: 2023-04-17') 
     end
+
+    it 'displays a button to deny request if user is the space owner' do
+      # Create Sam User object for test
+      fake_user = UserRepository.new.find_by_id(1)
+
+      # Request ID 2 is for a space Sam owns
+      response = get('/requests/2', {}, { 'rack.session' => { user: fake_user } })
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<form method="post" action="/deny_request">') 
+    end
+
+    it 'fails to display button to deny request if user is not the space owner' do
+      response = get('/requests/2')
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include('<form method="post" action="/deny_request">') 
+    end
+  end
+
+  context "POST /deny_request" do
+    it "updates the request to 'rejected in the DB'" do
+      request = RequestRepository.new.find_by_id(4)
+      expect(request.status).to eq "requested"
+      response = post('/deny_request', { request_id: 4 } )
+      request = RequestRepository.new.find_by_id(4)
+      expect(request.status).to eq "rejected"
+    end
+    it "redirects to /requests" do
+      response = post('/deny_request', { request_id: 4 } )
+      expect(response.status).to eq(302)
+      follow_redirect!
+      expect(last_request.path).to eq ('/requests')
+    end
   end
 
   context 'POST /spaces/:id' do
