@@ -115,7 +115,11 @@ class Application < Sinatra::Base
     repo = RequestRepository.new
     repo.reject_request(params[:request_id])
     return redirect('/requests')
-  end    
+  end  
+  
+  get '/about' do
+    return erb(:about)
+  end
 
   
   helpers do
