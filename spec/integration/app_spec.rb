@@ -55,9 +55,9 @@ describe Application do
       expect(response.body).to include('<h1>Login to MakersBnB</h1>')
       expect(response.body).to include('<form method="POST" action="/login_attempt">')
       expect(response.body).to include('<label for="email">Email Address:</label>')
-      expect(response.body).to include('<input type="text" name="email" />')
+      expect(response.body).to include('<input type="text" name="email" id="email"/>')
       expect(response.body).to include('<label for="password">Password:</label>')
-      expect(response.body).to include('<input type="password" name="password" />')
+      expect(response.body).to include('<input type="password" name="password" id="password"/>')
     end
   end
 
@@ -144,7 +144,7 @@ describe Application do
       response = get('/spaces/2')
       expect(response.status).to eq 200
       expect(response.body).to include('<label for="date">Select a date:</label>')
-      expect(response.body).to include('<select name="date">')
+      expect(response.body).to include('<select name="date" id="date">')
       expect(response.body).to include('<option value="2023-03-16">2023-03-16</option>')
       expect(response.body).to include('<option value="2023-03-17">2023-03-17</option>')
       expect(response.body).to include('<option value="2023-03-18">2023-03-18</option>')
