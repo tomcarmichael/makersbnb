@@ -30,9 +30,9 @@ rspec
 rackup
 ```
 
-Visit the website in your browser at `localhost:9292` 
+Visit the website in your browser at [http://localhost:9292/](http://localhost:9292/).
 
-Log in to the website with email: `tom@email.com`, password: `tompassword`
+Log in to the website with email: `tom@email.com`, password: `tompassword`.
 
 You can now view listed spaces and click on a listing to see its own page where you can request to book from a range of available dates. On the `/requests` page, you can view requests that you have made, as well as requests for spaces that you own. 
 
